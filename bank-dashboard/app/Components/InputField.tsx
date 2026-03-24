@@ -44,6 +44,7 @@ const InputField = ({
         id={name}
         value={value}
       />
+
       {rightElement && (
         <div
           className={`absolute right-3 ${error ? "bottom-8.5" : "bottom-2"}  ${error ? "top-8.5" : "bottom-2"} text-gray-400 hover:text-gray-800 transition`}

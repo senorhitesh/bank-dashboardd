@@ -1,5 +1,21 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { saveUser, getUser } from "./lib/session";
+
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 dark:bg-black font-sans "></div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    const user = getUser();
+    if (user) {
+      router.replace("/dashboard");
+    } else {
+      router.replace("/login");
+    }
+  }, [router]);
+
+  // Show nothing while redirecting
+  return null;
 }
