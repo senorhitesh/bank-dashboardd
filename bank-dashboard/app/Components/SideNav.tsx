@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Activity,
   BellIcon,
@@ -24,18 +25,21 @@ import {
   UserX,
   LucideIcon,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 interface NavChild {
   id: string;
   label: string;
   icon: LucideIcon;
+  href: string;
 }
 
 interface NavItem {
   id: string;
   label: string;
   icon: LucideIcon;
+  href?: string;
   children?: NavChild[];
 }
 
@@ -44,18 +48,44 @@ const NavMenus: NavItem[] = [
     id: "dashboard",
     label: "Dashboard",
     icon: LayoutDashboard,
+    href: "/dashboard",
   },
   {
     id: "website",
     label: "Website",
     icon: Globe,
     children: [
-      { id: "popup", label: "Popup", icon: BellIcon },
-      { id: "web-info", label: "Web Info", icon: Info },
-      { id: "slider-image", label: "Slider Images", icon: Images },
-      { id: "gallery", label: "Gallery", icon: ImageIcon },
-      { id: "custom-link", label: "Custom Link", icon: Link },
-      { id: "custom-page", label: "Custom Pages", icon: FileTextIcon },
+      { id: "popup", label: "Popup", icon: BellIcon, href: "/dashboard/popup" },
+      {
+        id: "web-info",
+        label: "Web Info",
+        icon: Info,
+        href: "/dashboard/web-info",
+      },
+      {
+        id: "slider-image",
+        label: "Slider Images",
+        icon: Images,
+        href: "/dashboard/slider-image",
+      },
+      {
+        id: "gallery",
+        label: "Gallery",
+        icon: ImageIcon,
+        href: "/dashboard/gallery",
+      },
+      {
+        id: "custom-link",
+        label: "Custom Link",
+        icon: Link,
+        href: "/dashboard/custom-link",
+      },
+      {
+        id: "custom-page",
+        label: "Custom Pages",
+        icon: FileTextIcon,
+        href: "/dashboard/custom-page",
+      },
     ],
   },
   {
@@ -63,11 +93,31 @@ const NavMenus: NavItem[] = [
     label: "Bank",
     icon: Building,
     children: [
-      { id: "personal-details", label: "Personal Details", icon: User },
-      { id: "bank-board", label: "Bank Board", icon: Users2 },
-      { id: "bank-document", label: "Documents", icon: FolderOpen },
-      { id: "branches", label: "Branches", icon: MapPin },
-      { id: "maps", label: "Maps", icon: Map },
+      {
+        id: "personal-details",
+        label: "Personal Details",
+        icon: User,
+        href: "/dashboard/personal-details",
+      },
+      {
+        id: "bank-board",
+        label: "Bank Board",
+        icon: Users2,
+        href: "/dashboard/bank-board",
+      },
+      {
+        id: "bank-document",
+        label: "Documents",
+        icon: FolderOpen,
+        href: "/dashboard/bank-document",
+      },
+      {
+        id: "branches",
+        label: "Branches",
+        icon: MapPin,
+        href: "/dashboard/branches",
+      },
+      { id: "maps", label: "Maps", icon: Map, href: "/dashboard/maps" },
     ],
   },
   {
@@ -75,8 +125,18 @@ const NavMenus: NavItem[] = [
     label: "Content",
     icon: Newspaper,
     children: [
-      { id: "news", label: "News & Alerts", icon: Megaphone },
-      { id: "unclaim-account", label: "Unclaimed Accounts", icon: UserX },
+      {
+        id: "news",
+        label: "News & Alerts",
+        icon: Megaphone,
+        href: "/dashboard/news",
+      },
+      {
+        id: "unclaim-account",
+        label: "Unclaimed Accounts",
+        icon: UserX,
+        href: "/dashboard/unclaim-account",
+      },
     ],
   },
   {
@@ -84,23 +144,48 @@ const NavMenus: NavItem[] = [
     label: "Utility",
     icon: Settings,
     children: [
-      { id: "users", label: "Users", icon: UserCog },
-      { id: "activity-log", label: "Activity Log", icon: ClipboardList },
+      { id: "users", label: "Users", icon: UserCog, href: "/dashboard/users" },
+      {
+        id: "activity-log",
+        label: "Activity Log",
+        icon: ClipboardList,
+        href: "/dashboard/activity-log",
+      },
     ],
   },
 ];
 
 const SideNav = () => {
-  const [activeId, setActiveId] = useState<string>("dashboard");
+  const pathname = usePathname(); // ✅ Fixed: usePathname() returns string directly, not an object
   const [openGroups, setOpenGroups] = useState<string[]>([]);
+  const [activeId, setActiveId] = useState<string>("dashboard"); // ✅ Fixed: added missing state
+
+  // Auto-open the group whose child matches current URL
+  useEffect(() => {
+    NavMenus.forEach((item) => {
+      if (item.children?.some((c) => c.href === pathname)) {
+        setOpenGroups((prev) =>
+          prev.includes(item.id) ? prev : [...prev, item.id],
+        );
+        // Also set the active child based on current pathname
+        const activeChild = item.children?.find((c) => c.href === pathname);
+        if (activeChild) setActiveId(activeChild.id);
+      }
+      // Handle top-level active item
+      if (item.href === pathname && !item.children) {
+        setActiveId(item.id);
+      }
+    });
+  }, [pathname]);
+
+  const isOpen = (id: string) => openGroups.includes(id);
 
   const toggleGroup = (id: string) => {
+    // ✅ Fixed: added missing toggleGroup function
     setOpenGroups((prev) =>
       prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id],
     );
   };
-
-  const isOpen = (id: string) => openGroups.includes(id);
 
   return (
     <div className="border px-3 bg-white border-gray-200 rounded-xl m-1 fixed left-0 top-0 flex flex-col w-64 h-full shadow-sm">
@@ -125,7 +210,7 @@ const SideNav = () => {
           return (
             <div key={item.id}>
               {/* Parent Row */}
-              <button
+              <button // ✅ Better to use button for non-href items
                 onClick={() => {
                   if (hasChildren) {
                     toggleGroup(item.id);
@@ -155,8 +240,7 @@ const SideNav = () => {
                       }`}
                   />
                   <span
-                    className={`font-medium tracking-[-0.01em]
-                      ${isActive && !hasChildren ? "text-blue-700" : ""}`}
+                    className={`font-medium tracking-[-0.01em] ${isActive && !hasChildren ? "text-blue-700" : ""}`}
                   >
                     {item.label}
                   </span>
@@ -185,7 +269,8 @@ const SideNav = () => {
                       const isChildItemActive = activeId === child.id;
 
                       return (
-                        <button
+                        <a // ✅ use <a> or Next.js <Link> from next/link
+                          href={child.href}
                           key={child.id}
                           onClick={() => setActiveId(child.id)}
                           className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all duration-150 group
@@ -204,13 +289,11 @@ const SideNav = () => {
                             }`}
                           />
                           <span
-                            className={`font-normal ${
-                              isChildItemActive ? "font-medium" : ""
-                            }`}
+                            className={`font-normal ${isChildItemActive ? "font-medium" : ""}`}
                           >
                             {child.label}
                           </span>
-                        </button>
+                        </a>
                       );
                     })}
                   </div>
