@@ -2,9 +2,8 @@
 import { Input } from "@/components/base/input/input";
 import { Button } from "@/components/base/buttons/button";
 import { Save } from "lucide-react";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useSegmentState } from "next/dist/next-devtools/userspace/app/segment-explorer-node";
 
 const initialBankData = {
   WebsiteTitle: "The Chandrapur District Central Co-operative Bank",
@@ -29,8 +28,6 @@ const initialBankData = {
 
 export default function WebInfoSettings() {
   const [infoChnaged, setinfoChnaged] = useState(false);
-  const [changedInfo, setchangedInfo] = useState("");
-
   const [formData, setformData] = useState(initialBankData);
   const [savedData, setSavedData] = useState(initialBankData);
   function undoChanges() {
@@ -77,18 +74,13 @@ export default function WebInfoSettings() {
               });
             }}
             disabled={!isChanged}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all duration-150 active:scale-95
-    ${
-      isChanged
-        ? "bg-blue-500 hover:bg-blue-600 text-white"
-        : "bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
-    }`}
+            className={`  gap-2  rounded-md transition-all duration-150 active:scale-95
+                 ${
+                   isChanged
+                     ? "bg-blue-500 hover:bg-blue-600 text-white"
+                     : "bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
+                 }`}
           >
-            <Save
-              className={`w-4 h-4 ${
-                isChanged ? "text-white" : "text-neutral-400"
-              }`}
-            />
             Save Changes
           </Button>
         </div>
