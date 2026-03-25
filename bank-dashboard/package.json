@@ -9,8 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@react-stately/utils": "^3.11.0",
     "@untitledui/icons": "^0.0.21",
     "formik": "^2.4.9",
+    "input-otp": "^1.4.2",
     "lucide-react": "^0.577.0",
     "next": "16.2.1",
     "react": "19.2.4",
