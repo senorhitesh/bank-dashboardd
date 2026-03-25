@@ -9,8 +9,8 @@ export interface MockUser {
 export const MOCK_USERS: MockUser[] = [
   {
     id: "1",
-    email: "admin@bank.com",
-    password: "admin123",
+    email: "a@a.com",
+    password: "123",
     role: "super_admin",
     name: "Admin User",
   },
