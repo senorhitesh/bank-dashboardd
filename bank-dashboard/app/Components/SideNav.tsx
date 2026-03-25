@@ -28,7 +28,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link"; // ✅ KEY IMPORT
-// import { removeUser } from "../../lib/session";
+import { removeUser } from "../lib/session";
 
 interface NavChild {
   id: string;
@@ -190,7 +190,7 @@ const SideNav = () => {
   };
 
   const handleLogout = () => {
-    // removeUser();
+    removeUser();
     router.replace("/login");
   };
 

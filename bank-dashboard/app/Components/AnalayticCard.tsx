@@ -30,7 +30,7 @@ const AnalayticCard = ({ icon, data, percentage, Title }: AnalayticProp) => {
       {/* Percentage Badge */}
       {percentage && (
         <div className="flex items-center self-end px-2 py-0.5 border border-gray-200 rounded text-emerald-600 font-medium text-sm">
-          <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" strokeWidth={2.5} />$
+          <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" strokeWidth={2.5} />
           {percentage} %
         </div>
       )}

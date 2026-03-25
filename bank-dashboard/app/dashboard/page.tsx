@@ -7,6 +7,7 @@ import {
   MapPin,
   EllipsisVertical,
   Megaphone,
+  Plus,
 } from "lucide-react";
 import AnalayticCard from "../Components/AnalayticCard";
 import { Edit02 } from "@untitledui/icons";
@@ -117,14 +118,19 @@ export default function DashboardPage() {
       <div className="w-full border mt-3 border-gray-200 rounded-lg bg-white shadow-sm">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
-          <div className="flex items-center gap-2.5">
-            <Megaphone className="w-5 h-5 text-slate-500" strokeWidth={1.5} />
-            <h2 className="text-sm font-medium text-slate-600">
-              News & Notifications
-            </h2>
-            <p className="text-sm bg-blue-500 px-3 text-white font-medium py-1 rounded-full ">
-              New
-            </p>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Megaphone className="w-5 h-5 text-slate-500" strokeWidth={1.5} />
+              <h2 className="text-sm font-medium text-slate-600">
+                News & Notifications
+              </h2>
+              <p className="text-sm scale-90 bg-blue-500 px-3 text-white font-medium py-1 rounded-full ">
+                New
+              </p>
+            </div>
+            <div>
+              <Plus className="text-gray-500" />
+            </div>
           </div>
         </div>
 
