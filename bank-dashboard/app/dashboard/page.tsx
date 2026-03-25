@@ -7,9 +7,6 @@ import {
   MapPin,
   EllipsisVertical,
   Megaphone,
-  CirclePlus,
-  Trash2,
-  Check,
 } from "lucide-react";
 import AnalayticCard from "../Components/AnalayticCard";
 import { Edit02 } from "@untitledui/icons";
@@ -39,7 +36,7 @@ const InfoRow = ({
 };
 export default function DashboardPage() {
   return (
-    <div className=" flex flex-col  h-screen overflow-y-auto">
+    <div className=" flex flex-col">
       <div className="flex items-center justify-between">
         {" "}
         <p className="text-xl font-bold text-neutral-800">Analytics</p>
