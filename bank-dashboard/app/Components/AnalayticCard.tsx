@@ -6,17 +6,26 @@ interface AnalayticProp {
   percentage?: string;
   Title: string;
   data: string;
+  className: string;
 }
 
-const AnalayticCard = ({ icon, data, percentage, Title }: AnalayticProp) => {
+const AnalayticCard = ({
+  icon,
+  data,
+  percentage,
+  Title,
+  className = "bg-white text-neutral-950",
+}: AnalayticProp) => {
   const Icon = icon;
 
   return (
     <div className="flex items-center justify-between p-4 border border-gray-100 rounded-xl bg-white shadow-sm">
       <div className="flex items-center gap-4">
         {/* Icon Container */}
-        <div className="flex hover:bg-blue-50 transition items-center justify-center w-11 h-11 border border-gray-200 rounded-lg text-slate-600">
-          <Icon />
+        <div
+          className={`flex hover:bg-blue-50 transition items-center justify-center w-11 h-11 border border-gray-200 rounded-lg  text-slate-600 ${className && `${className}`}`}
+        >
+          <Icon className={`${className}`} />
         </div>
         {/*     Text Content */}
         <div className="flex flex-col">

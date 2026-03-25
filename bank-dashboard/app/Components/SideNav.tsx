@@ -62,7 +62,7 @@ const NavMenus: NavItem[] = [
         id: "web-info",
         label: "Web Info",
         icon: Info,
-        href: "/dashboard/web-info",
+        href: "/dashboard/webinfo",
       },
       {
         id: "slider-image",
@@ -285,7 +285,7 @@ const SideNav = () => {
                           href={child.href}
                           key={child.id}
                           onClick={() => setActiveId(child.id)}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all duration-150 group ${
+                          className={`flex items-center focus:ring-2 focus:ring-blue-100 gap-2 px-3 py-1.5 rounded-lg text-sm transition-all duration-150 group ${
                             isChildItemActive
                               ? "bg-blue-50 text-blue-700"
                               : "text-neutral-400 hover:bg-neutral-50 hover:text-neutral-700"
