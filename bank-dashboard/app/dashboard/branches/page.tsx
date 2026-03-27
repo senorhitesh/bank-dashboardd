@@ -9,11 +9,16 @@ import {
   MapPin,
   Phone,
   Building2,
-  ImageIcon,
   Lock,
   X,
   Check,
 } from "lucide-react";
+
+import Field from "../../Components/branches/Field";
+import Th from "../../Components/branches/Th";
+import Input from "../../Components/branches/Input";
+import LockerToggle from "@/app/Components/branches/LockerToggle";
+import ModalHeader from "@/app/Components/branches/ModalHeader";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -23,7 +28,6 @@ interface Branch {
   location: string;
   ifsc: string;
   phone: string;
-  image: string;
   locker: boolean;
 }
 
@@ -36,44 +40,6 @@ const INITIAL_BRANCHES: Branch[] = [
     location: "Civil Lines, Nagpur Road, Chandrapur - 442401",
     ifsc: "CDCC0000001",
     phone: "07172-252180",
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=80&h=60&fit=crop",
-    locker: true,
-  },
-  {
-    id: 2,
-    name: "Ballarpur Branch",
-    location: "Main Road, Ballarpur, Chandrapur",
-    ifsc: "CDCC0000002",
-    phone: "07172-241100",
-    image: "",
-    locker: true,
-  },
-  {
-    id: 3,
-    name: "Warora Branch",
-    location: "Station Road, Warora, Chandrapur",
-    ifsc: "CDCC0000003",
-    phone: "07175-243210",
-    image: "",
-    locker: false,
-  },
-  {
-    id: 4,
-    name: "Rajura Branch",
-    location: "Near Bus Stand, Rajura, Chandrapur",
-    ifsc: "CDCC0000004",
-    phone: "07179-234567",
-    image: "",
-    locker: false,
-  },
-  {
-    id: 5,
-    name: "Mul Branch",
-    location: "Mul Road, Chandrapur District",
-    ifsc: "CDCC0000005",
-    phone: "07175-256789",
-    image: "",
     locker: true,
   },
 ];
@@ -85,7 +51,6 @@ const EMPTY_BRANCH: Omit<Branch, "id"> = {
   location: "",
   ifsc: "",
   phone: "",
-  image: "",
   locker: false,
 };
 
@@ -127,22 +92,12 @@ function BranchModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg">
         {/* Modal header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100">
-          <h3 className="text-base font-semibold text-neutral-800">
-            {initial ? "Edit Branch" : "Add Branch"}
-          </h3>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-neutral-400 hover:bg-neutral-100 transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+        <ModalHeader onClick={onClose} initail={initial} />
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="px-6 py-5 flex flex-col gap-4">
           <Field label="Branch Name" error={errors.name}>
-            <input
+            <Input
               type="text"
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
@@ -151,7 +106,7 @@ function BranchModal({
             />
           </Field>
           <Field label="Branch Location" error={errors.location}>
-            <input
+            <Input
               type="text"
               value={form.location}
               onChange={(e) => set("location", e.target.value)}
@@ -161,7 +116,7 @@ function BranchModal({
           </Field>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Bank IFSC" error={errors.ifsc}>
-              <input
+              <Input
                 type="text"
                 value={form.ifsc}
                 onChange={(e) => set("ifsc", e.target.value.toUpperCase())}
@@ -170,7 +125,7 @@ function BranchModal({
               />
             </Field>
             <Field label="Phone No." error={errors.phone}>
-              <input
+              <Input
                 type="text"
                 value={form.phone}
                 onChange={(e) => set("phone", e.target.value)}
@@ -179,37 +134,11 @@ function BranchModal({
               />
             </Field>
           </div>
-          <Field label="Image URL (optional)">
-            <input
-              type="text"
-              value={form.image}
-              onChange={(e) => set("image", e.target.value)}
-              placeholder="https://..."
-              className={inputClass(false)}
-            />
-          </Field>
           {/* Locker toggle */}
-          <div className="flex items-center justify-between py-2 px-3 bg-neutral-50 rounded-lg border border-neutral-100">
-            <div>
-              <p className="text-sm font-medium text-neutral-700">
-                Locker facility
-              </p>
-              <p className="text-xs text-neutral-400">
-                Does this branch have a locker?
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => set("locker", !form.locker)}
-              className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors
-                ${form.locker ? "bg-blue-600" : "bg-neutral-300"}`}
-            >
-              <span
-                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform
-                  ${form.locker ? "translate-x-4" : "translate-x-1"}`}
-              />
-            </button>
-          </div>
+          <LockerToggle
+            onClick={() => set("locker", !form.locker)}
+            formLocker={form.locker}
+          />
 
           {/* Footer */}
           <div className="flex justify-end gap-2 pt-1">
@@ -234,24 +163,6 @@ function BranchModal({
 }
 
 // ─── Tiny helpers ─────────────────────────────────────────────────────────────
-
-function Field({
-  label,
-  error,
-  children,
-}: {
-  label: string;
-  error?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium text-neutral-500">{label}</label>
-      {children}
-      {error && <p className="text-xs text-red-500">{error}</p>}
-    </div>
-  );
-}
 
 function inputClass(hasError: boolean) {
   return `px-3 py-2 text-sm border rounded-lg outline-none transition-all font-sans
@@ -363,7 +274,6 @@ export default function BranchesPage() {
                   <Th>Branch Location</Th>
                   <Th>Bank IFSC</Th>
                   <Th>Phone No.</Th>
-                  <Th>Image</Th>
                   <Th>Locker</Th>
                   <Th align="right">Actions</Th>
                 </tr>
@@ -430,23 +340,6 @@ export default function BranchesPage() {
                           <Phone className="w-3 h-3 text-neutral-400" />
                           {branch.phone}
                         </span>
-                      </td>
-
-                      {/* Image */}
-                      <td className="px-4 py-3">
-                        {branch.image ? (
-                          <div className="w-12 h-8 rounded overflow-hidden border border-neutral-100">
-                            <img
-                              src={branch.image}
-                              alt={branch.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-12 h-8 rounded bg-neutral-100 flex items-center justify-center border border-neutral-100">
-                            <ImageIcon className="w-3.5 h-3.5 text-neutral-300" />
-                          </div>
-                        )}
                       </td>
 
                       {/* Locker */}
@@ -524,24 +417,5 @@ export default function BranchesPage() {
         </div>
       </div>
     </>
-  );
-}
-
-// ─── Table header cell ────────────────────────────────────────────────────────
-
-function Th({
-  children,
-  align = "left",
-}: {
-  children: React.ReactNode;
-  align?: "left" | "right";
-}) {
-  return (
-    <th
-      className={`px-4 py-2.5 text-xs font-semibold text-neutral-500 tracking-wide whitespace-nowrap
-        ${align === "right" ? "text-right" : "text-left"}`}
-    >
-      {children}
-    </th>
   );
 }
