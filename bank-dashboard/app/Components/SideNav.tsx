@@ -25,9 +25,9 @@ import {
   LogOut,
   LucideIcon,
 } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link"; // ✅ KEY IMPORT
+import Link from "next/link";
 import { removeUser } from "../lib/session";
 
 interface NavChild {
@@ -44,7 +44,6 @@ interface NavItem {
   href?: string;
   children?: NavChild[];
 }
-
 const NavMenus: NavItem[] = [
   {
     id: "dashboard",
@@ -163,10 +162,8 @@ const SideNav = () => {
   const [openGroups, setOpenGroups] = useState<string[]>([]);
   const [activeId, setActiveId] = useState<string>("dashboard");
 
-  // Auto-open the correct group + set active item based on URL
   useEffect(() => {
     NavMenus.forEach((item) => {
-      // Check if a child matches the current path
       if (item.children?.some((c) => c.href === pathname)) {
         setOpenGroups((prev) =>
           prev.includes(item.id) ? prev : [...prev, item.id],
@@ -174,7 +171,6 @@ const SideNav = () => {
         const activeChild = item.children?.find((c) => c.href === pathname);
         if (activeChild) setActiveId(activeChild.id);
       }
-      // Check top-level match
       if (item.href === pathname && !item.children) {
         setActiveId(item.id);
       }
@@ -195,18 +191,28 @@ const SideNav = () => {
   };
 
   return (
-    <div className="border px-3 bg-white border-gray-200 rounded-xl m-1 fixed left-0 top-0 flex flex-col w-64 h-[calc(100vh-8px)] shadow-sm">
-      {/* Logo */}
-      <div className="py-5 px-1 border-b border-gray-100">
+    // position-fixed, top-0, and start-0 handle the alignment
+    // We use inline styles for the specific 64px width and custom height
+    <aside
+      className="position-fixed top-0 start-0 d-flex flex-column bg-white border-end shadow-sm"
+      style={{
+        width: "260px",
+        height: "100vh",
+        zIndex: 1040,
+        padding: "0 12px",
+      }}
+    >
+      {/* Logo Section */}
+      <div className="py-4 px-2 border-bottom border-light">
         <img
           src="https://uat.chandrapurdccb.bank.in/webadmin/resources/assets/img/logo/Soft-Tech-logo.png"
           alt="Soft Tech Solutions"
-          className="w-36"
+          style={{ width: "140px" }}
         />
       </div>
 
-      {/* Nav Items */}
-      <nav className="flex-1 overflow-y-auto py-4 flex flex-col gap-0.5">
+      {/* Navigation Area */}
+      <nav className="flex-grow-1 overflow-auto py-3 d-flex flex-column gap-1">
         {NavMenus.map((item) => {
           const Icon = item.icon;
           const hasChildren = !!item.children;
@@ -214,96 +220,75 @@ const SideNav = () => {
           const isActive = activeId === item.id;
           const isChildActive = item.children?.some((c) => c.id === activeId);
 
-          const sharedClass = `w-full flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-sm transition-all duration-150 group ${
+          // sharedClass: Handles the primary blue look for active items
+          const sharedClass = `btn w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 border-0 transition-all text-start ${
             isActive && !hasChildren
-              ? "bg-blue-50 text-blue-700"
+              ? "bg-primary-subtle text-primary fw-bold"
               : isChildActive
-                ? "text-neutral-800"
-                : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-800"
-          }`;
-
-          const iconClass = `shrink-0 transition-colors ${
-            isActive && !hasChildren
-              ? "text-blue-600"
-              : isChildActive
-                ? "text-neutral-700"
-                : "text-neutral-400 group-hover:text-neutral-600"
-          }`;
-
-          const labelClass = `font-medium tracking-[-0.01em] ${
-            isActive && !hasChildren ? "text-blue-700" : ""
+                ? "text-dark fw-medium"
+                : "text-secondary hover-bg-light"
           }`;
 
           return (
-            <div key={item.id}>
-              {/* ✅ Parent with children → button to toggle, no navigation */}
+            <div key={item.id} className="mb-1">
               {hasChildren ? (
                 <button
                   onClick={() => toggleGroup(item.id)}
                   className={sharedClass}
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Icon size={17} className={iconClass} />
-                    <span className={labelClass}>{item.label}</span>
+                  <div className="d-flex align-items-center gap-3">
+                    <Icon
+                      size={18}
+                      className={isChildActive ? "text-primary" : "text-muted"}
+                    />
+                    <span className="small">{item.label}</span>
                   </div>
                   <ChevronDown
-                    size={15}
-                    className={`text-neutral-400 transition-transform duration-200 ${
-                      isGroupOpen ? "rotate-180" : ""
-                    }`}
+                    size={14}
+                    className={`text-muted transition-transform ${isGroupOpen ? "rotate-180" : ""}`}
+                    style={{ transition: "0.2s" }}
                   />
                 </button>
               ) : (
-                // ✅ Top-level item with no children → Link for instant navigation
-                <Link
-                  href={item.href!}
-                  onClick={() => setActiveId(item.id)}
-                  className={sharedClass}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Icon size={17} className={iconClass} />
-                    <span className={labelClass}>{item.label}</span>
+                <Link href={item.href!} className={sharedClass}>
+                  <div className="d-flex align-items-center gap-3">
+                    <Icon
+                      size={18}
+                      className={isActive ? "text-primary" : "text-muted"}
+                    />
+                    <span className="small">{item.label}</span>
                   </div>
                 </Link>
               )}
 
-              {/* Children dropdown */}
+              {/* Children Group */}
               {hasChildren && (
                 <div
-                  className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                    isGroupOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                  }`}
+                  className={`overflow-hidden transition-all ${isGroupOpen ? "d-block" : "d-none"}`}
+                  style={{ marginLeft: "28px", borderLeft: "1px solid #eee" }}
                 >
-                  <div className="ml-3 pl-3 border-l border-gray-100 mt-0.5 mb-1 flex flex-col gap-0.5">
+                  <div className="d-flex flex-column gap-1 mt-1 ms-2">
                     {item.children!.map((child) => {
                       const ChildIcon = child.icon;
                       const isChildItemActive = activeId === child.id;
 
                       return (
-                        // ✅ Child items → Link for instant navigation
                         <Link
                           href={child.href}
                           key={child.id}
-                          onClick={() => setActiveId(child.id)}
-                          className={`flex items-center focus:ring-2 focus:ring-blue-100 gap-2 px-3 py-1.5 rounded-lg text-sm transition-all duration-150 group ${
+                          className={`btn btn-sm w-100 d-flex align-items-center gap-2 px-3 py-2 rounded-3 border-0 text-start ${
                             isChildItemActive
-                              ? "bg-blue-50 text-blue-700"
-                              : "text-neutral-400 hover:bg-neutral-50 hover:text-neutral-700"
+                              ? "bg-primary-subtle text-primary fw-bold"
+                              : "text-muted hover-bg-light"
                           }`}
                         >
                           <ChildIcon
                             size={14}
-                            className={`shrink-0 ${
-                              isChildItemActive
-                                ? "text-blue-500"
-                                : "text-neutral-400 group-hover:text-neutral-500"
-                            }`}
-                          />
-                          <span
                             className={
-                              isChildItemActive ? "font-medium" : "font-normal"
+                              isChildItemActive ? "text-primary" : "text-muted"
                             }
-                          >
+                          />
+                          <span style={{ fontSize: "0.85rem" }}>
                             {child.label}
                           </span>
                         </Link>
@@ -317,28 +302,34 @@ const SideNav = () => {
         })}
       </nav>
 
-      {/* Profile + Logout */}
-      <div className="py-3 border-t border-gray-100">
-        <div className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-neutral-50 transition-colors">
-          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold flex items-center justify-center shrink-0 ring-2 ring-gray-100">
+      {/* User Profile Footer */}
+      <div className="py-3 mt-auto border-top border-light">
+        <div className="d-flex align-items-center gap-3 p-2 rounded-3 hover-bg-light transition-all">
+          <div
+            className="d-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold flex-shrink-0"
+            style={{ width: "36px", height: "36px", fontSize: "12px" }}
+          >
             AD
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-neutral-800 leading-tight truncate">
-              Admin
+          <div className="flex-grow-1 overflow-hidden">
+            <p className="small fw-bold text-dark mb-0 text-truncate">Admin</p>
+            <p
+              className="text-muted mb-0 text-truncate"
+              style={{ fontSize: "11px" }}
+            >
+              admin@bank.com
             </p>
-            <p className="text-xs text-neutral-400 truncate">admin@bank.com</p>
           </div>
           <button
             onClick={handleLogout}
+            className="btn btn-sm btn-light text-muted p-1 rounded-2 border-0"
             title="Sign out"
-            className="p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-colors shrink-0"
           >
-            <LogOut size={15} />
+            <LogOut size={16} />
           </button>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

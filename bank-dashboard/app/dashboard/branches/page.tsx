@@ -19,9 +19,10 @@ import Th from "../../Components/branches/Th";
 import Input from "../../Components/branches/Input";
 import LockerToggle from "@/app/Components/branches/LockerToggle";
 import ModalHeader from "@/app/Components/branches/ModalHeader";
+import TableFooter from "@/app/Components/branches/TableFooter";
+import TableHead from "@/app/Components/branches/TableHead";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
+// --- Types & Mock Data ---
 interface Branch {
   id: number;
   name: string;
@@ -30,8 +31,6 @@ interface Branch {
   phone: string;
   locker: boolean;
 }
-
-// ─── Mock data ────────────────────────────────────────────────────────────────
 
 const INITIAL_BRANCHES: Branch[] = [
   {
@@ -44,8 +43,6 @@ const INITIAL_BRANCHES: Branch[] = [
   },
 ];
 
-// ─── Add / Edit Modal ─────────────────────────────────────────────────────────
-
 const EMPTY_BRANCH: Omit<Branch, "id"> = {
   name: "",
   location: "",
@@ -54,6 +51,7 @@ const EMPTY_BRANCH: Omit<Branch, "id"> = {
   locker: false,
 };
 
+// --- Add / Edit Modal ---
 function BranchModal({
   initial,
   onSave,
@@ -89,72 +87,87 @@ function BranchModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg">
-        {/* Modal header */}
-        <ModalHeader onClick={onClose} initail={initial} />
+    // Custom backdrop to mimic Bootstrap's modal behavior
+    <div
+      className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+      style={{
+        backgroundColor: "rgba(0,0,0,0.5)",
+        zIndex: 1050,
+        padding: "1rem",
+      }}
+    >
+      <div
+        className="card shadow-lg w-100"
+        style={{ maxWidth: "500px", borderRadius: "16px" }}
+      >
+        <ModalHeader onClick={onClose} initial={initial} />
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="px-6 py-5 flex flex-col gap-4">
-          <Field label="Branch Name" error={errors.name}>
-            <Input
-              type="text"
-              value={form.name}
-              onChange={(e) => set("name", e.target.value)}
-              placeholder="e.g. Head Office"
-              className={inputClass(!!errors.name)}
-            />
-          </Field>
-          <Field label="Branch Location" error={errors.location}>
-            <Input
-              type="text"
-              value={form.location}
-              onChange={(e) => set("location", e.target.value)}
-              placeholder="Full address"
-              className={inputClass(!!errors.location)}
-            />
-          </Field>
-          <div className="grid grid-cols-2 gap-4">
-            <Field label="Bank IFSC" error={errors.ifsc}>
+        <form onSubmit={handleSubmit} className="card-body p-4">
+          <div className="d-flex flex-column gap-3">
+            <Field label="Branch Name" error={errors.name}>
               <Input
                 type="text"
-                value={form.ifsc}
-                onChange={(e) => set("ifsc", e.target.value.toUpperCase())}
-                placeholder="CDCC0000001"
-                className={inputClass(!!errors.ifsc)}
+                value={form.name}
+                onChange={(e: any) => set("name", e.target.value)}
+                placeholder="e.g. Head Office"
+                className={inputClass(!!errors.name)}
               />
             </Field>
-            <Field label="Phone No." error={errors.phone}>
+
+            <Field label="Branch Location" error={errors.location}>
               <Input
                 type="text"
-                value={form.phone}
-                onChange={(e) => set("phone", e.target.value)}
-                placeholder="07172-252180"
-                className={inputClass(!!errors.phone)}
+                value={form.location}
+                onChange={(e: any) => set("location", e.target.value)}
+                placeholder="Full address"
+                className={inputClass(!!errors.location)}
               />
             </Field>
-          </div>
-          {/* Locker toggle */}
-          <LockerToggle
-            onClick={() => set("locker", !form.locker)}
-            formLocker={form.locker}
-          />
 
-          {/* Footer */}
-          <div className="flex justify-end gap-2 pt-1">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-neutral-600 bg-white border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 active:scale-[0.98] transition-all"
-            >
-              {initial ? "Save changes" : "Add branch"}
-            </button>
+            <div className="row g-3">
+              <div className="col-6">
+                <Field label="Bank IFSC" error={errors.ifsc}>
+                  <Input
+                    type="text"
+                    value={form.ifsc}
+                    onChange={(e: any) =>
+                      set("ifsc", e.target.value.toUpperCase())
+                    }
+                    placeholder="CDCC0000001"
+                    className={inputClass(!!errors.ifsc)}
+                  />
+                </Field>
+              </div>
+              <div className="col-6">
+                <Field label="Phone No." error={errors.phone}>
+                  <Input
+                    type="text"
+                    value={form.phone}
+                    onChange={(e: any) => set("phone", e.target.value)}
+                    placeholder="07172-252180"
+                    className={inputClass(!!errors.phone)}
+                  />
+                </Field>
+              </div>
+            </div>
+
+            <LockerToggle
+              onClick={() => set("locker", !form.locker)}
+              formLocker={form.locker}
+            />
+
+            <div className="d-flex justify-content-end gap-2 mt-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="btn btn-outline-secondary px-4"
+              >
+                Cancel
+              </button>
+              <button type="submit" className="btn btn-primary px-4">
+                {initial ? "Save changes" : "Add branch"}
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -162,19 +175,11 @@ function BranchModal({
   );
 }
 
-// ─── Tiny helpers ─────────────────────────────────────────────────────────────
-
 function inputClass(hasError: boolean) {
-  return `px-3 py-2 text-sm border rounded-lg outline-none transition-all font-sans
-    ${
-      hasError
-        ? "border-red-300 focus:ring-2 focus:ring-red-100"
-        : "border-neutral-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
-    }`;
+  return `form-control shadow-none ${hasError ? "is-invalid" : ""}`;
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
+// --- Main Page ---
 export default function BranchesPage() {
   const [branches, setBranches] = useState<Branch[]>(INITIAL_BRANCHES);
   const [search, setSearch] = useState("");
@@ -209,7 +214,6 @@ export default function BranchesPage() {
 
   return (
     <>
-      {/* Modal */}
       {modal === "add" && (
         <BranchModal onSave={handleAdd} onClose={() => setModal(null)} />
       )}
@@ -224,69 +228,52 @@ export default function BranchesPage() {
         />
       )}
 
-      <div className="flex flex-col gap-4">
-        {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="container-fluid p-0 d-flex flex-column gap-4">
+        {/* Header Section */}
+        <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
           <div>
-            <h2 className="text-xl font-semibold text-neutral-800 tracking-tight">
-              Branches
-            </h2>
-            <p className="text-xs text-neutral-400 mt-0.5">
+            <h2 className="h4 fw-bold text-dark mb-1">Branches</h2>
+            <p className="small text-muted mb-0">
               Bank branch details provided by bank · {branches.length} total
             </p>
           </div>
           <button
             onClick={() => setModal("add")}
-            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium
-                       bg-white text-neutral-800 border border-neutral-200 rounded-md
-                       hover:bg-neutral-50 active:scale-[0.98] transition-all shadow-sm"
+            className="btn btn-white border shadow-sm d-flex align-items-center gap-2 fw-medium"
           >
-            <Plus className="w-4 h-4" />
-            Add Branch
+            <Plus size={18} /> Add Branch
           </button>
         </div>
 
-        {/* Table card */}
-        <div className="bg-white border border-neutral-100 rounded-xl shadow-sm overflow-hidden">
-          {/* Search */}
-          <div className="px-4 py-3 border-b border-neutral-100">
-            <div className="relative max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
+        {/* Table Card */}
+        <div className="card shadow-sm border-0 overflow-hidden">
+          {/* Search Header */}
+          <div className="card-header bg-white border-bottom py-3 px-4">
+            <div className="position-relative" style={{ maxWidth: "350px" }}>
+              <Search
+                size={16}
+                className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+              />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search branches..."
-                className="w-full pl-9 pr-3 py-2 text-sm border border-neutral-200 rounded-lg
-                           outline-none focus:ring-2 focus:ring-neutral-200 focus:border-neutral-300
-                           placeholder-neutral-400 transition-all"
+                className="form-control ps-5 shadow-none"
               />
             </div>
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-neutral-100 bg-neutral-50/60">
-                  <Th>Sr. No.</Th>
-                  <Th>Branch Name</Th>
-                  <Th>Branch Location</Th>
-                  <Th>Bank IFSC</Th>
-                  <Th>Phone No.</Th>
-                  <Th>Locker</Th>
-                  <Th align="right">Actions</Th>
-                </tr>
-              </thead>
-              <tbody>
+          {/* Table Area */}
+          <div className="table-responsive">
+            <table className="table table-hover align-middle mb-0">
+              <TableHead />
+              <tbody className="border-top-0">
                 {filtered.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={8}
-                      className="py-16 text-center text-neutral-400"
-                    >
-                      <Building2 className="w-8 h-8 opacity-25 mx-auto mb-3" />
-                      <p className="text-sm font-medium">
+                    <td colSpan={8} className="py-5 text-center text-muted">
+                      <Building2 size={40} className="opacity-25 mb-3" />
+                      <p className="fw-medium mb-1">
                         {search
                           ? "No branches match your search"
                           : "No branches added yet"}
@@ -294,7 +281,7 @@ export default function BranchesPage() {
                       {!search && (
                         <button
                           onClick={() => setModal("add")}
-                          className="mt-3 text-xs text-blue-600 hover:underline"
+                          className="btn btn-link btn-sm text-decoration-none p-0"
                         >
                           Add your first branch
                         </button>
@@ -303,77 +290,52 @@ export default function BranchesPage() {
                   </tr>
                 ) : (
                   filtered.map((branch, idx) => (
-                    <tr
-                      key={branch.id}
-                      className="border-b border-neutral-50 hover:bg-neutral-50/50 transition-colors last:border-b-0"
-                    >
-                      {/* Sr. No */}
-                      <td className="px-4 py-3 text-neutral-400 text-xs w-12">
-                        {idx + 1}
+                    <tr key={branch.id}>
+                      <td className="ps-4 text-muted small">{idx + 1}</td>
+                      <td className="fw-bold text-dark">{branch.name}</td>
+                      <td style={{ maxWidth: "220px" }}>
+                        <div className="d-flex gap-2 align-items-start small text-muted">
+                          <MapPin size={14} className="mt-1 flex-shrink-0" />
+                          <span>{branch.location}</span>
+                        </div>
                       </td>
-
-                      {/* Branch Name */}
-                      <td className="px-4 py-3">
-                        <p className="font-medium text-neutral-800 whitespace-nowrap">
-                          {branch.name}
-                        </p>
-                      </td>
-
-                      {/* Location */}
-                      <td className="px-4 py-3 max-w-55">
-                        <p className="text-neutral-500 text-xs leading-relaxed flex gap-1">
-                          <MapPin className="w-3 h-3 mt-0.5 shrink-0 text-neutral-400" />
-                          {branch.location}
-                        </p>
-                      </td>
-
-                      {/* IFSC */}
-                      <td className="px-4 py-3">
-                        <span className="font-mono text-xs bg-neutral-100 text-neutral-600 px-2 py-1 rounded">
+                      <td>
+                        <span className="badge bg-light text-dark font-monospace fw-normal p-2">
                           {branch.ifsc}
                         </span>
                       </td>
-
-                      {/* Phone */}
-                      <td className="px-4 py-3">
-                        <span className="text-neutral-600 text-xs flex items-center gap-1 whitespace-nowrap">
-                          <Phone className="w-3 h-3 text-neutral-400" />
-                          {branch.phone}
-                        </span>
+                      <td>
+                        <div className="d-flex align-items-center gap-2 small text-muted">
+                          <Phone size={14} /> {branch.phone}
+                        </div>
                       </td>
-
-                      {/* Locker */}
-                      <td className="px-4 py-3">
+                      <td>
                         {branch.locker ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700">
-                            <Lock className="w-2.5 h-2.5" /> Yes
+                          <span className="badge rounded-pill bg-success-subtle text-success px-3 py-2">
+                            <Lock size={12} className="me-1" /> Yes
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-neutral-100 text-neutral-500">
-                            <X className="w-2.5 h-2.5" /> No
+                          <span className="badge rounded-pill bg-light text-secondary px-3 py-2">
+                            <X size={12} className="me-1" /> No
                           </span>
                         )}
                       </td>
-
-                      {/* Actions */}
-                      <td className="px-4 py-3">
-                        <div className="flex items-center justify-end gap-1">
+                      <td className="pe-4 text-end">
+                        <div className="d-flex justify-content-end gap-1">
                           {deleteId === branch.id ? (
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-xs text-neutral-500">
-                                Delete?
-                              </span>
+                            <div className="d-flex align-items-center gap-2">
+                              <span className="small text-muted">Delete?</span>
                               <button
                                 onClick={() => handleDelete(branch.id)}
-                                className="p-1.5 rounded bg-red-500 text-white hover:bg-red-600 transition-colors"
+                                className="btn btn-danger btn-sm p-1"
                               >
-                                <Check className="w-3 h-3" />
+                                <Check size={14} />
                               </button>
                               <button
                                 onClick={() => setDeleteId(null)}
-                                className="p-1.5 rounded bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-colors"
+                                className="btn btn-light btn-sm border p-1"
                               >
-                                <X className="w-3 h-3" />
+                                <X size={14} />
                               </button>
                             </div>
                           ) : (
@@ -383,17 +345,15 @@ export default function BranchesPage() {
                                   setEditTarget(branch);
                                   setModal("edit");
                                 }}
-                                className="p-1.5 rounded-lg text-neutral-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                                title="Edit"
+                                className="btn btn-light btn-sm text-muted border-0"
                               >
-                                <Pencil className="w-3.5 h-3.5" />
+                                <Pencil size={16} />
                               </button>
                               <button
                                 onClick={() => setDeleteId(branch.id)}
-                                className="p-1.5 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-colors"
-                                title="Delete"
+                                className="btn btn-light btn-sm text-muted border-0 hover-danger"
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
+                                <Trash2 size={16} />
                               </button>
                             </>
                           )}
@@ -406,12 +366,13 @@ export default function BranchesPage() {
             </table>
           </div>
 
-          {/* Footer count */}
+          {/* Footer */}
           {filtered.length > 0 && (
-            <div className="px-4 py-2.5 border-t border-neutral-50 bg-neutral-50/40">
-              <p className="text-xs text-neutral-400">
-                Showing {filtered.length} of {branches.length} branches
-              </p>
+            <div className="card-footer bg-white py-3">
+              <TableFooter
+                filLength={filtered.length}
+                branLength={branches.length}
+              />
             </div>
           )}
         </div>

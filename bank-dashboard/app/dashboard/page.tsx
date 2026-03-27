@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ArrowUpRight,
   Eye,
@@ -11,6 +13,8 @@ import {
 } from "lucide-react";
 import AnalayticCard from "../Components/AnalayticCard";
 import { Edit02 } from "@untitledui/icons";
+
+// --- InfoRow Sub-component ---
 const InfoRow = ({
   icon: Icon,
   label,
@@ -21,136 +25,150 @@ const InfoRow = ({
   value: string;
 }) => {
   return (
-    <div className="flex items-start gap-4 py-4 border-b last:border-b-0 border-gray-200">
-      {/* Icon */}
-      <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600">
-        <Icon className="w-5 h-5" />
+    // d-flex replaces flex; border-bottom handles the separators
+    <div className="d-flex align-items-start gap-3 py-3 border-bottom border-light last-child-border-0">
+      {/* Icon Container */}
+      <div
+        className="d-flex align-items-center justify-content-center rounded-3 bg-light text-secondary"
+        style={{ width: "40px", height: "40px", flexShrink: 0 }}
+      >
+        <Icon size={20} />
       </div>
 
-      {/* Text */}
-      <div className="flex flex-col">
-        <p className="text-sm text-gray-400 font-medium">{label}</p>
-        <p className="text-gray-800 font-medium">{value}</p>
+      {/* Text Content */}
+      <div className="d-flex flex-column">
+        <p className="small text-muted fw-medium mb-0">{label}</p>
+        <p className="text-dark fw-medium mb-0">{value}</p>
       </div>
     </div>
   );
 };
+
 export default function DashboardPage() {
   return (
-    <div className=" flex flex-col">
-      <div className="flex items-center justify-between">
-        {" "}
-        <p className="text-xl font-bold text-neutral-800">Analytics</p>
-        <div className="bg-white cursor-pointer border font-medium gap-1 group items-center justify-center border-neutral-200 shadow rounded-md flex px-2 py-1 w-fit ">
-          <p className="text-sm  text-neutral-800">Visit Site</p>
-          <ArrowUpRight className="text-neutral-300 transition group-hover:text-neutral-700 text-sm" />
+    <div className="d-flex flex-column gap-4">
+      {/* 1. Header & Analytics Title */}
+      <div className="d-flex align-items-center justify-content-between">
+        <h2 className="h5 fw-bold text-dark mb-0">Analytics</h2>
+        <div
+          className="btn btn-white border shadow-sm d-flex align-items-center gap-2 py-1 px-3 rounded-2 transition-all"
+          style={{ cursor: "pointer" }}
+        >
+          <span className="small fw-bold text-dark">Visit Site</span>
+          <ArrowUpRight size={14} className="text-muted" />
         </div>
       </div>
-      <div className="w-full mt-3  gap-4 grid lg:grid-cols-2 md:grid-col-2 sm:grid-cols-1 rounded-md">
-        <AnalayticCard
-          Title="Page views"
-          data={"12000"}
-          icon={Eye}
-          percentage={"3.3"}
-        />
-        <AnalayticCard
-          Title="Last Login Time"
-          icon={User}
-          data={"2026-03-20 12:21:02"}
-        />
-      </div>
-      {/* Bank Details */}
-      <div className="w-full mt-3  gap-4 flex rounded-md">
-        {/* Bank Card */}
-        <div className="w-full  border border-gray-100 rounded-xl bg-white shadow-sm p-6">
-          <div className="flex justify-between w-full">
-            {" "}
-            <p className="text-sm font-semibold text-neutral-500 mb-1">
-              Details
-            </p>
-            <Edit02 className="text-gray-400 active:scale-95 hover:text-blue-400 transtion" />
-          </div>
-          <InfoRow
+
+      {/* 2. Analytics Cards Grid */}
+      <div className="row g-3">
+        <div className="col-12 col-md-6">
+          <AnalayticCard
+            Title="Page views"
+            data={"12,000"}
+            icon={Eye}
+            percentage={"3.3"}
+            className="bg-primary-subtle text-primary border-primary-subtle"
+          />
+        </div>
+        <div className="col-12 col-md-6">
+          <AnalayticCard
+            Title="Last Login Time"
             icon={User}
-            label="User Name"
-            value="The Chandrapur District Central Co-Operative Bank"
+            data={"2026-03-20 12:21:02"}
+            className="bg-light text-dark border-light"
           />
-
-          <InfoRow icon={Mail} label="Email" value="info@cdccbank.co.in" />
-
-          <InfoRow icon={Phone} label="Phone" value="07172-252180" />
-
-          <InfoRow
-            icon={MapPin}
-            label="Address"
-            value="Head Office Civil Lines, Nagpur Road Chandrapur, 442401, Maharashtra, India"
-          />
-        </div>
-        {/* Details Card */}
-        <div className="w-1/3 bg-white border h-fit border-gray-200 rounded-xl shadow-sm p-5">
-          <div className="justify-between flex">
-            {" "}
-            <p className="text-sm font-semibold text-neutral-500 mb-4">
-              Overview
-            </p>
-            <EllipsisVertical className="text-neutral-400 active:scale-95 hover:text-neutral-800 transtion" />
-          </div>
-
-          <div className="flex flex-col divide-y h-fit divide-gray-100">
-            <div className="flex items-center justify-between py-3">
-              <p className="text-sm font-medium text-neutral-700">Users</p>
-              <p className="text-lg font-semibold text-neutral-900">32</p>
-            </div>
-
-            <div className="flex items-center justify-between py-3">
-              <p className="text-sm font-medium text-neutral-700">Staff</p>
-              <p className="text-lg font-semibold text-neutral-900">12</p>
-            </div>
-
-            <div className="flex items-center justify-between py-3">
-              <p className="text-sm font-medium text-neutral-700">Branch</p>
-              <p className="text-lg font-semibold text-neutral-900">02</p>
-            </div>
-          </div>
         </div>
       </div>
-      {/* News and Notification */}
-      <div className="w-full border mt-3 border-gray-200 rounded-lg bg-white shadow-sm">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-100">
-          <div className="flex w-full items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Megaphone className="w-5 h-5 text-slate-500" strokeWidth={1.5} />
-              <h2 className="text-sm font-medium text-slate-600">
-                News & Notifications
-              </h2>
-              <p className="text-sm scale-90 bg-blue-500 px-3 text-white font-medium py-1 rounded-full ">
-                New
+
+      {/* 3. Bank Details & Overview Row */}
+      <div className="row g-3">
+        {/* Left: Bank Details Card */}
+        <div className="col-12 col-lg-8">
+          <div className="card border-light shadow-sm rounded-4 p-4 h-100">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <p className="small fw-bold text-muted text-uppercase mb-0 tracking-wider">
+                Details
               </p>
+              <button className="btn btn-link p-0 text-muted hover-primary transition-all">
+                <Edit02 size={18} />
+              </button>
             </div>
-            <div>
-              <Plus className="text-gray-500" />
-            </div>
+
+            <InfoRow
+              icon={User}
+              label="User Name"
+              value="The Chandrapur District Central Co-Operative Bank"
+            />
+            <InfoRow icon={Mail} label="Email" value="info@cdccbank.co.in" />
+            <InfoRow icon={Phone} label="Phone" value="07172-252180" />
+            <InfoRow
+              icon={MapPin}
+              label="Address"
+              value="Head Office Civil Lines, Nagpur Road Chandrapur, 442401, Maharashtra, India"
+            />
           </div>
         </div>
 
-        {/* Notifications List */}
-        <div className="divide-y divide-gray-100 max-h-96 overflow-y-auto">
-          <div
-            className={` flex flex-col gap-4 p-4 hover:bg-gray-50 transition-colors `}
-          >
-            <div className="flex flex-col  sm:flex-row sm:items-center justify-between gap-2">
-              <div className="flex w-full justify-between">
-                <p className={`text-sm font-medium   text-gray-600`}>
-                  Welcome to The Chandrapur District Central Co-operative Bank
-                  Ltd
-                </p>
-                <p className={`text-sm font-medium   text-gray-500`}>
-                  2025-02-22
-                </p>
+        {/* Right: Overview Stats Card */}
+        <div className="col-12 col-lg-4">
+          <div className="card border-light shadow-sm rounded-4 p-4">
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <p className="small fw-bold text-muted text-uppercase mb-0 tracking-wider">
+                Overview
+              </p>
+              <button className="btn btn-link p-0 text-muted">
+                <EllipsisVertical size={18} />
+              </button>
+            </div>
+
+            <div className="d-flex flex-column">
+              <div className="d-flex align-items-center justify-content-between py-3 border-bottom border-light">
+                <p className="small fw-medium text-secondary mb-0">Users</p>
+                <p className="h6 fw-bold text-dark mb-0">32</p>
+              </div>
+              <div className="d-flex align-items-center justify-content-between py-3 border-bottom border-light">
+                <p className="small fw-medium text-secondary mb-0">Staff</p>
+                <p className="h6 fw-bold text-dark mb-0">12</p>
+              </div>
+              <div className="d-flex align-items-center justify-content-between py-3 border-bottom border-light">
+                <p className="small fw-medium text-secondary mb-0">Branch</p>
+                <p className="h6 fw-bold text-dark mb-0">02</p>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* 4. News and Notification Section */}
+      <div className="card border-light shadow-sm rounded-4 overflow-hidden">
+        {/* Header */}
+        <div className="card-header bg-white py-3 px-4 d-flex align-items-center justify-content-between border-bottom border-light">
+          <div className="d-flex align-items-center gap-2">
+            <Megaphone size={18} className="text-secondary" />
+            <h2 className="h6 fw-bold text-dark mb-0">News & Notifications</h2>
+            <span className="badge rounded-pill bg-primary px-3 ms-2">New</span>
+          </div>
+          <button className="btn btn-light btn-sm rounded-circle p-1">
+            <Plus size={18} className="text-muted" />
+          </button>
+        </div>
+
+        {/* Notifications List */}
+        <div
+          className="list-group list-group-flush"
+          style={{ maxHeight: "300px", overflowY: "auto" }}
+        >
+          <div className="list-group-item list-group-item-action p-4 border-0 border-bottom border-light">
+            <div className="d-flex align-items-center justify-content-between gap-3">
+              <p className="small fw-medium text-dark mb-0">
+                Welcome to The Chandrapur District Central Co-operative Bank Ltd
+              </p>
+              <span className="small text-muted fw-medium text-nowrap">
+                2025-02-22
+              </span>
+            </div>
+          </div>
+          {/* Add more items here */}
         </div>
       </div>
     </div>

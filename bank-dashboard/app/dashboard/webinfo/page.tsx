@@ -1,4 +1,5 @@
 "use client";
+
 import { Input } from "@/components/base/input/input";
 import { Button } from "@/components/base/buttons/button";
 import { Save } from "lucide-react";
@@ -27,37 +28,45 @@ const initialBankData = {
 };
 
 export default function WebInfoSettings() {
-  const [infoChnaged, setinfoChnaged] = useState(false);
+  const [infoChanged, setinfoChanged] = useState(false);
   const [formData, setformData] = useState(initialBankData);
   const [savedData, setSavedData] = useState(initialBankData);
+
   function undoChanges() {
-    setformData(savedData); // ✅ revert to last saved state
-    setinfoChnaged(false);
+    setformData(savedData);
+    setinfoChanged(false);
   }
 
   const isChanged = useMemo(() => {
     return JSON.stringify(formData) !== JSON.stringify(savedData);
   }, [formData, savedData]);
 
+  const updateField = (key: keyof typeof initialBankData, value: string) => {
+    setformData((prev) => ({ ...prev, [key]: value }));
+    setinfoChanged(true);
+  };
+
   return (
-    <div className="mx-auto p-6 md:p-8  min-h-screen">
+    // container handles centering; py-4 provides vertical breathing room
+    <div className="container py-4 min-vh-100">
       <Toaster />
+
       {/* Page Header */}
-      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Web Info Settings
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="h4 fw-bold text-dark mb-1">Web Info Settings</h1>
+          <p className="small text-muted mb-0">
             Manage your bank's public details, application links, and social
             media presence.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          {infoChnaged && (
+
+        <div className="d-flex align-items-center gap-2">
+          {infoChanged && (
             <Button
               onClick={undoChanges}
-              className={`bg-red-500 text-white  active:scale-95 transtion-all duration-150`}
+              // We established btn-danger in previous steps
+              className="btn btn-danger px-4 shadow-sm"
             >
               Cancel
             </Button>
@@ -65,263 +74,170 @@ export default function WebInfoSettings() {
           <Button
             onClick={() => {
               if (!isChanged) return;
-
               setSavedData(formData);
-              setinfoChnaged(false);
-
-              toast.success("Information updated successfully!", {
-                position: "top-center",
-              });
+              setinfoChanged(false);
+              toast.success("Information updated successfully!");
             }}
             disabled={!isChanged}
-            className={`  gap-2  rounded-md transition-all duration-150 active:scale-95
-                 ${
-                   isChanged
-                     ? "bg-blue-500 hover:bg-blue-600 text-white"
-                     : "bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
-                 }`}
+            className={`btn px-4 shadow-sm ${
+              isChanged ? "btn-primary" : "btn-secondary disabled opacity-50"
+            }`}
           >
-            Save Changes
+            <Save size={18} className="me-2" /> Save Changes
           </Button>
         </div>
       </div>
 
-      <form className="space-y-6">
-        {/* CARD 1: Bank Basic Details */}
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">
-              Bank Basic Details
-            </h2>
-            <p className="text-sm text-gray-500">
-              Essential public information displayed on your website.
+      <form className="d-flex flex-column gap-4">
+        {/* SECTION 1: Bank Basic Details */}
+        <div className="card border-0 shadow-sm rounded-4">
+          <div className="card-header bg-white py-3 px-4 border-bottom">
+            <h2 className="h6 fw-bold text-dark mb-1">Bank Basic Details</h2>
+            <p className="small text-muted mb-0">
+              Essential public information.
             </p>
           </div>
-          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input
-              label="Website Title"
-              value={formData.WebsiteTitle}
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  WebsiteTitle: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.OpenCloseTime}
-              label="Open/Close Time"
-              placeholder="e.g., 10:00 AM to 04:00 PM"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  OpenCloseTime: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.LocationCity}
-              label="Location City"
-              placeholder="Enter city"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  LocationCity: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.RegistrationNo}
-              label="Registration No."
-              placeholder="Enter registration number"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  RegistrationNo: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.RBILicenseNo}
-              label="RBI License No."
-              placeholder="Enter RBI License number"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  RBILicenseNo: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.BankIFSC}
-              label="Bank IFSC"
-              placeholder="Enter IFSC code"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  BankIFSC: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.PAN}
-              label="PAN No."
-              placeholder="Enter PAN number"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  PAN: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.TAN}
-              label="TAN No."
-              placeholder="Enter TAN number"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  TAN: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.GST}
-              label="GST No."
-              placeholder="Enter GST number"
-              className="md:col-span-2 " // Spans full width if it's the odd one out
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  GST: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
+          <div className="card-body p-4">
+            <div className="row g-4">
+              <div className="col-md-6">
+                <Input
+                  label="Website Title"
+                  value={formData.WebsiteTitle}
+                  onChange={(v: string) => updateField("WebsiteTitle", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="Open/Close Time"
+                  value={formData.OpenCloseTime}
+                  onChange={(v: string) => updateField("OpenCloseTime", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="Location City"
+                  value={formData.LocationCity}
+                  onChange={(v: string) => updateField("LocationCity", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="Registration No."
+                  value={formData.RegistrationNo}
+                  onChange={(v: string) => updateField("RegistrationNo", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="RBI License No."
+                  value={formData.RBILicenseNo}
+                  onChange={(v: string) => updateField("RBILicenseNo", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="Bank IFSC"
+                  value={formData.BankIFSC}
+                  onChange={(v: string) => updateField("BankIFSC", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="PAN No."
+                  value={formData.PAN}
+                  onChange={(v: string) => updateField("PAN", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="TAN No."
+                  value={formData.TAN}
+                  onChange={(v: string) => updateField("TAN", v)}
+                />
+              </div>
+              <div className="col-12">
+                <Input
+                  label="GST No."
+                  value={formData.GST}
+                  onChange={(v: string) => updateField("GST", v)}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* CARD 2: Banking Links */}
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Banking Links</h2>
-            <p className="text-sm text-gray-500">
-              URLs for net banking and mobile applications.
-            </p>
+        {/* SECTION 2: Banking Links */}
+        <div className="card border-0 shadow-sm rounded-4">
+          <div className="card-header bg-white py-3 px-4 border-bottom">
+            <h2 className="h6 fw-bold text-dark mb-1">Banking Links</h2>
+            <p className="small text-muted mb-0">App Store and Mobile URLs.</p>
           </div>
-          <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Input
-              value={formData.NetBankingLink}
-              label="Net Banking Link"
-              placeholder="https://netbanking.domain.com"
-              type="url"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  NetBankingLink: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.AndroidApplicationLink}
-              label="Android Application Link"
-              placeholder="Play Store URL"
-              type="url"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  AndroidApplicationLink: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.IOSApplicationLink}
-              label="iOS Application Link"
-              placeholder="App Store URL"
-              type="url"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  IOSApplicationLink: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
+          <div className="card-body p-4">
+            <div className="row g-4">
+              <div className="col-md-4">
+                <Input
+                  label="Net Banking Link"
+                  value={formData.NetBankingLink}
+                  onChange={(v: string) => updateField("NetBankingLink", v)}
+                />
+              </div>
+              <div className="col-md-4">
+                <Input
+                  label="Android App Link"
+                  value={formData.AndroidApplicationLink}
+                  onChange={(v: string) =>
+                    updateField("AndroidApplicationLink", v)
+                  }
+                />
+              </div>
+              <div className="col-md-4">
+                <Input
+                  label="iOS App Link"
+                  value={formData.IOSApplicationLink}
+                  onChange={(v: string) => updateField("IOSApplicationLink", v)}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* CARD 3: Social Media */}
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Social Media</h2>
-            <p className="text-sm text-gray-500">
-              Connect your bank's official social media profiles.
-            </p>
+        {/* SECTION 3: Social Media */}
+        <div className="card border-0 shadow-sm rounded-4">
+          <div className="card-header bg-white py-3 px-4 border-bottom">
+            <h2 className="h6 fw-bold text-dark mb-1">Social Media</h2>
+            <p className="small text-muted mb-0">Official social profiles.</p>
           </div>
-          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input
-              value={formData.FacebookLink}
-              label="Facebook Link"
-              placeholder="https://facebook.com/..."
-              type="url"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  FacebookLink: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.InstagramLink}
-              label="Instagram Link"
-              placeholder="https://instagram.com/..."
-              type="url"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  InstagramLink: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.Twitter}
-              label="Twitter Link"
-              defaultValue="#"
-              placeholder="https://twitter.com/..."
-              type="url"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  Twitter: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
-            <Input
-              value={formData.WhatsAppBanking}
-              label="WhatsApp Banking"
-              placeholder="WhatsApp wa.me link"
-              type="url"
-              onChange={(value: string) => {
-                setformData((prev) => ({
-                  ...prev,
-                  WhatsAppBanking: value,
-                }));
-                setinfoChnaged(true);
-              }}
-            />
+          <div className="card-body p-4">
+            <div className="row g-4">
+              <div className="col-md-6">
+                <Input
+                  label="Facebook Link"
+                  value={formData.FacebookLink}
+                  onChange={(v: string) => updateField("FacebookLink", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="Instagram Link"
+                  value={formData.InstagramLink}
+                  onChange={(v: string) => updateField("InstagramLink", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="Twitter Link"
+                  value={formData.Twitter}
+                  onChange={(v: string) => updateField("Twitter", v)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Input
+                  label="WhatsApp Banking"
+                  value={formData.WhatsAppBanking}
+                  onChange={(v: string) => updateField("WhatsAppBanking", v)}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </form>

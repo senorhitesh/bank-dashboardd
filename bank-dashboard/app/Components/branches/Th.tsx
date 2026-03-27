@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function Th({
   children,
   align = "left",
@@ -7,8 +9,13 @@ export default function Th({
 }) {
   return (
     <th
-      className={`px-4 py-2.5 text-xs font-semibold text-neutral-500 tracking-wide whitespace-nowrap
-        ${align === "right" ? "text-right" : "text-left"}`}
+      className={`
+        px-4 py-3 
+        small fw-bold text-secondary text-uppercase 
+        text-nowrap border-bottom-0
+        ${align === "right" ? "text-end" : "text-start"}
+      `}
+      style={{ fontSize: "0.75rem", letterSpacing: "0.025em" }}
     >
       {children}
     </th>

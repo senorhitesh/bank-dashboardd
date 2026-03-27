@@ -10,22 +10,49 @@ const ToggleBtn = ({ onClick, imgEnabled }: TBProp) => {
   return (
     <button
       onClick={onClick}
+      type="button"
       title={imgEnabled ? "Hide slide" : "Show slide"}
-      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium
-                       backdrop-blur-sm border transition-colors
-                       ${
-                         imgEnabled
-                           ? "bg-white/20 text-white border-white/30 hover:bg-white/30"
-                           : "bg-amber-400/80 text-amber-900 border-amber-300/50 hover:bg-amber-400"
-                       }`}
+      /**
+       * 'd-flex' and 'align-items-center' for layout.
+       * 'rounded-pill' for the pill shape.
+       * 'btn-sm' and 'fw-medium' for the text style.
+       */
+      className={`btn btn-sm d-flex align-items-center gap-2 rounded-pill fw-medium border transition-all ${
+        imgEnabled ? "text-white" : "text-dark"
+      }`}
+      style={{
+        fontSize: "10px", // Approximate for text-xs
+        padding: "2px 10px",
+        backdropFilter: "blur(4px)",
+        // Custom background and border logic to match Tailwind's precise opacity
+        backgroundColor: imgEnabled
+          ? "rgba(255, 255, 255, 0.2)"
+          : "rgba(255, 193, 7, 0.85)", // Bootstrap 'warning' yellow
+        borderColor: imgEnabled
+          ? "rgba(255, 255, 255, 0.3)"
+          : "rgba(255, 193, 7, 0.5)",
+      }}
+      // Handle hover states manually or via Bootstrap classes if preferred
+      onMouseOver={(e) => {
+        e.currentTarget.style.backgroundColor = imgEnabled
+          ? "rgba(255, 255, 255, 0.3)"
+          : "rgba(255, 193, 7, 1)";
+      }}
+      onMouseOut={(e) => {
+        e.currentTarget.style.backgroundColor = imgEnabled
+          ? "rgba(255, 255, 255, 0.2)"
+          : "rgba(255, 193, 7, 0.85)";
+      }}
     >
       {imgEnabled ? (
         <>
-          <Eye className="w-3 h-3" /> Active
+          <Eye size={12} />
+          <span>Active</span>
         </>
       ) : (
         <>
-          <EyeOff className="w-3 h-3" /> Hidden
+          <EyeOff size={12} />
+          <span>Hidden</span>
         </>
       )}
     </button>

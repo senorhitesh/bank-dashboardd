@@ -16,8 +16,7 @@ import {
 import AnalayticCard from "@/app/Components/AnalayticCard";
 import SearchInput from "@/app/Components/SearchInput";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
+// --- Types & Data ---
 interface StatusDetail {
   title: string;
   icon: React.ElementType;
@@ -33,8 +32,6 @@ interface Popup {
   statusDetails: StatusDetail[];
 }
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-
 const POPUPS: Popup[] = [
   {
     id: 1,
@@ -43,7 +40,7 @@ const POPUPS: Popup[] = [
     status: "Published",
     lastUpdate: "Updated 2025-03-01",
     statusDetails: [
-      { title: "Visible on homepage", icon: Eye, color: "text-green-600" },
+      { title: "Visible on homepage", icon: Eye, color: "text-success" },
     ],
   },
   {
@@ -53,7 +50,7 @@ const POPUPS: Popup[] = [
     status: "Draft",
     lastUpdate: "Updated 2025-02-22",
     statusDetails: [
-      { title: "No image added", icon: Image, color: "text-orange-500" },
+      { title: "No image added", icon: Image, color: "text-warning" },
     ],
   },
   {
@@ -63,7 +60,7 @@ const POPUPS: Popup[] = [
     status: "Published",
     lastUpdate: "Updated 2025-01-15",
     statusDetails: [
-      { title: "Visible on homepage", icon: Eye, color: "text-green-600" },
+      { title: "Visible on homepage", icon: Eye, color: "text-success" },
     ],
   },
   {
@@ -73,7 +70,7 @@ const POPUPS: Popup[] = [
     status: "Draft",
     lastUpdate: "Updated 2025-03-10",
     statusDetails: [
-      { title: "Pending review", icon: AlertCircle, color: "text-orange-500" },
+      { title: "Pending review", icon: AlertCircle, color: "text-warning" },
     ],
   },
   {
@@ -94,17 +91,13 @@ const POPUPS: Popup[] = [
       {
         title: "Missing title and image",
         icon: AlertCircle,
-        color: "text-red-500",
+        color: "text-danger",
       },
     ],
   },
 ];
 
-// ─── Tab type ─────────────────────────────────────────────────────────────────
-
 type Tab = "All" | "Published" | "Draft";
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
 
 const PopupPage = () => {
   const [activeTab, setActiveTab] = useState<Tab>("All");
@@ -115,8 +108,7 @@ const PopupPage = () => {
 
   const filtered = POPUPS.filter((p) => {
     const matchesTab = activeTab === "All" || p.status === activeTab;
-    const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase());
-    return matchesTab && matchesSearch;
+    return matchesTab && p.title.toLowerCase().includes(search.toLowerCase());
   });
 
   const tabs: Tab[] = ["All", "Published", "Draft"];
@@ -126,58 +118,56 @@ const PopupPage = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="container-fluid p-0 d-flex flex-column gap-4">
       {/* Title + CTA */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-neutral-800 tracking-tight">
-          Popups
-        </h2>
-        <button
-          className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium
-                     bg-white text-neutral-800 border border-neutral-200 rounded-md
-                     hover:bg-neutral-50 active:scale-[0.98] transition-all
-                     focus:outline-none focus:ring-2 focus:ring-neutral-300 shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Add Popup
+      <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <h2 className="h4 fw-bold text-dark mb-0">Popups</h2>
+        <button className="btn btn-white border shadow-sm d-flex align-items-center gap-2 fw-medium">
+          <Plus size={18} /> Add Popup
         </button>
       </div>
 
-      {/* Stats */}
-      <div className="grid gap-4 grid-cols-3">
-        <AnalayticCard
-          icon={ListChevronsUpDown}
-          data={String(POPUPS.length)}
-          Title="Total"
-          className="bg-blue-50 text-blue-600"
-        />
-        <AnalayticCard
-          icon={FolderCheck}
-          data={String(published)}
-          Title="Published"
-          className="bg-green-50 text-green-500"
-        />
-        <AnalayticCard
-          icon={FolderClock}
-          data={String(drafts)}
-          Title="Drafts"
-          className="bg-orange-50 text-orange-500"
-        />
+      {/* Stats Grid */}
+      <div className="row g-3">
+        <div className="col-4">
+          <AnalayticCard
+            icon={ListChevronsUpDown}
+            data={String(POPUPS.length)}
+            Title="Total"
+            // Use Bootstrap utility colors instead of Tailwind strings
+            className="bg-primary bg-opacity-10 text-primary border-0"
+          />
+        </div>
+        <div className="col-4">
+          <AnalayticCard
+            icon={FolderCheck}
+            data={String(published)}
+            Title="Published"
+            className="bg-success bg-opacity-10 text-success border-0"
+          />
+        </div>
+        <div className="col-4">
+          <AnalayticCard
+            icon={FolderClock}
+            data={String(drafts)}
+            Title="Drafts"
+            className="bg-warning bg-opacity-10 text-warning border-0"
+          />
+        </div>
       </div>
 
-      {/* Tabs + Search */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex gap-2">
+      {/* Tabs + Search Navigation */}
+      <div className="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+        <div className="nav nav-pills gap-2">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-md border transition-all duration-150 active:scale-95
-                ${
-                  activeTab === tab
-                    ? "bg-neutral-900 text-white border-neutral-900"
-                    : "bg-white text-neutral-600 border-neutral-200 hover:bg-neutral-50"
-                }`}
+              className={`btn btn-sm px-3 fw-medium ${
+                activeTab === tab
+                  ? "btn-dark"
+                  : "btn-white border text-secondary"
+              }`}
             >
               {tab} ({tabCount(tab)})
             </button>
@@ -191,12 +181,12 @@ const PopupPage = () => {
         />
       </div>
 
-      {/* List */}
-      <div className="flex flex-col gap-2">
+      {/* Popup List */}
+      <div className="d-flex flex-column gap-2">
         {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-14 bg-white border border-dashed border-neutral-200 rounded-xl text-neutral-400">
-            <Image className="w-8 h-8 mb-3 opacity-30" />
-            <p className="text-sm">No popups found</p>
+          <div className="d-flex flex-column align-items-center justify-content-center py-5 bg-white border border-dashed rounded-3 text-muted">
+            <Image size={32} className="opacity-25 mb-3" />
+            <p className="small mb-0">No popups found</p>
           </div>
         ) : (
           filtered.map((popup) => <PopupCard key={popup.id} popup={popup} />)
@@ -206,81 +196,80 @@ const PopupPage = () => {
   );
 };
 
-// ─── Popup Card ───────────────────────────────────────────────────────────────
-
+// --- Popup Card Component ---
 const PopupCard = ({ popup }: { popup: Popup }) => {
   return (
-    <div className="flex items-center gap-4 p-3 bg-white border border-neutral-100 rounded-xl hover:border-neutral-200 hover:shadow-sm transition-all">
-      {/* Thumbnail */}
-      <div className="w-20 h-14 rounded-lg overflow-hidden bg-neutral-100 shrink-0 flex items-center justify-center">
-        {popup.img ? (
-          <img
-            src={popup.img}
-            alt={popup.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <Image className="w-5 h-5 text-neutral-300" />
-        )}
-      </div>
-
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        {/* Title + badge */}
-        <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <p className="text-sm font-medium text-neutral-800 truncate">
-            {popup.title}
-          </p>
-          <span
-            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium shrink-0
-              ${
-                popup.status === "Published"
-                  ? "bg-green-50 text-green-700"
-                  : "bg-amber-50 text-amber-700"
-              }`}
-          >
-            {popup.status}
-          </span>
-        </div>
-
-        {/* Meta row */}
-        <div className="flex items-center gap-4 flex-wrap">
-          {popup.lastUpdate && (
-            <span className="flex items-center gap-1 text-xs text-neutral-400">
-              <Calendar className="w-3 h-3" />
-              {popup.lastUpdate}
-            </span>
+    <div className="card border-light shadow-sm hover-shadow-md transition-all p-2">
+      <div className="card-body d-flex align-items-center gap-3 p-1">
+        {/* Thumbnail */}
+        <div
+          className="rounded bg-light d-flex align-items-center justify-content-center overflow-hidden flex-shrink-0"
+          style={{ width: "80px", height: "56px" }}
+        >
+          {popup.img ? (
+            <img
+              src={popup.img}
+              alt={popup.title}
+              className="w-100 h-100 object-fit-cover"
+            />
+          ) : (
+            <Image size={20} className="text-secondary opacity-50" />
           )}
-          {/* Status details — fixed: map the array correctly */}
-          {popup.statusDetails.map((detail, i) => {
-            const Icon = detail.icon;
-            return (
-              <span
-                key={i}
-                className={`flex items-center gap-1 text-xs ${detail.color}`}
-              >
-                <Icon className="w-3 h-3" />
-                {detail.title}
-              </span>
-            );
-          })}
         </div>
-      </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-1 shrink-0">
-        <button
-          className="p-2 rounded-lg text-neutral-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-          title="Edit"
-        >
-          <Pencil className="w-4 h-4" />
-        </button>
-        <button
-          className="p-2 rounded-lg text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-colors"
-          title="Delete"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        {/* Info Content */}
+        <div className="flex-grow-1 min-width-0">
+          <div className="d-flex align-items-center gap-2 mb-1 flex-wrap">
+            <p
+              className="small fw-bold text-dark mb-0 text-truncate"
+              style={{ maxWidth: "250px" }}
+            >
+              {popup.title}
+            </p>
+            <span
+              className={`badge rounded-pill fw-medium ${
+                popup.status === "Published"
+                  ? "bg-success-subtle text-success"
+                  : "bg-warning-subtle text-warning"
+              }`}
+            >
+              {popup.status}
+            </span>
+          </div>
+
+          <div className="d-flex align-items-center gap-3 flex-wrap">
+            {popup.lastUpdate && (
+              <span
+                className="d-flex align-items-center gap-1 small text-muted"
+                style={{ fontSize: "0.75rem" }}
+              >
+                <Calendar size={12} /> {popup.lastUpdate}
+              </span>
+            )}
+            {popup.statusDetails.map((detail, i) => {
+              const Icon = detail.icon;
+              return (
+                <span
+                  key={i}
+                  className={`d-flex align-items-center gap-1 small ${detail.color}`}
+                  style={{ fontSize: "0.75rem" }}
+                >
+                  <Icon size={12} /> {detail.title}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="d-flex gap-1 flex-shrink-0">
+          <button className="btn btn-sm btn-light text-muted border-0">
+            <Pencil size={16} />
+          </button>
+          <button className="btn btn-sm btn-light text-muted border-0 hover-danger">
+            <Trash2 size={16} />
+          </button>
+        </div>
       </div>
     </div>
   );

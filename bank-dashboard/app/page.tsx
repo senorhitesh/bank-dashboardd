@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { saveUser, getUser } from "./lib/session";
+import { getUser } from "./lib/session";
 
 export default function Home() {
   const router = useRouter();

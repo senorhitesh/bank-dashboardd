@@ -5,11 +5,9 @@ interface InputFieldProps {
   name: string;
   type?: string;
   placeholder?: string;
-
   value: string;
   error?: string;
   touched?: boolean;
-
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   rightElement?: React.ReactNode;
@@ -27,33 +25,57 @@ const InputField = ({
   handleBlur,
   rightElement,
 }: InputFieldProps) => {
+  const isInvalid = touched && error;
+
   return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-neutral-600" htmlFor={name}>
-        {label} <span className="text-red-500">*</span>
+    // mb-3 is the standard Bootstrap spacing for form groups
+    <div className="mb-3">
+      <label
+        className="form-label fw-medium text-secondary small"
+        htmlFor={name}
+      >
+        {label} <span className="text-danger">*</span>
       </label>
 
-      <input
-        onChange={handleChange}
-        onBlur={handleBlur}
-        className={`px-3 py-2.5 text-sm rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2
-        ${touched && error ? "border-red-400 bg-red-50" : "border-gray-200"}`}
-        type={type}
-        placeholder={placeholder}
-        name={name}
-        id={name}
-        value={value}
-      />
+      {/* Position relative is needed to contain the absolute-positioned rightElement */}
+      <div className="position-relative">
+        <input
+          onChange={handleChange}
+          onBlur={handleBlur}
+          name={name}
+          id={name}
+          type={type}
+          value={value}
+          placeholder={placeholder}
+          // .form-control is the base; .is-invalid handles the red border
+          className={`form-control shadow-none ${isInvalid ? "is-invalid" : ""}`}
+          style={{ paddingRight: rightElement ? "40px" : "12px" }}
+        />
 
-      {rightElement && (
+        {rightElement && (
+          <div
+            className="position-absolute end-0 translate-middle-y"
+            style={{
+              top: "50%",
+              right: "12px",
+              zIndex: 5,
+              paddingRight: "10px",
+            }}
+          >
+            {rightElement}
+          </div>
+        )}
+      </div>
+
+      {/* Bootstrap's invalid-feedback only shows if the sibling input has .is-invalid */}
+      {isInvalid && (
         <div
-          className={`absolute right-3 ${error ? "bottom-8.5" : "bottom-2"}  ${error ? "top-8.5" : "bottom-2"} text-gray-400 hover:text-gray-800 transition`}
+          className="invalid-feedback d-block mt-1"
+          style={{ fontSize: "0.85rem" }}
         >
-          {" "}
-          {rightElement}
+          {error}
         </div>
       )}
-      {touched && error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function Field({
   label,
   error,
@@ -8,10 +10,20 @@ export default function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium text-neutral-500">{label}</label>
+    // 'mb-3' is the standard Bootstrap spacing for form groups
+    <div className="mb-3">
+      {/* 'form-label' provides proper spacing; 'small' and 'text-muted' match your design */}
+      <label className="form-label small fw-medium text-muted mb-1">
+        {label}
+      </label>
+
+      {/* This is where your Input component will sit */}
       {children}
-      {error && <p className="text-xs text-red-500">{error}</p>}
+
+      {/* 'invalid-feedback' is built for this. 'd-block' ensures it shows since it's conditional */}
+      {error && (
+        <div className="invalid-feedback d-block small mt-1">{error}</div>
+      )}
     </div>
   );
 }
