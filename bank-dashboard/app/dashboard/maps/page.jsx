@@ -197,7 +197,7 @@ export default function MapsPage() {
           </div>
           <button
             onClick={() => setEditing(true)}
-            className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 shadow-sm bg-white text-dark"
+            className="btn btn-white border shadow-sm d-flex align-items-center gap-2 fw-medium"
           >
             <Pencil size={14} />
             Edit details

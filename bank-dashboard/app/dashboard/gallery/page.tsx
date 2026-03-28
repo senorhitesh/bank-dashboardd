@@ -1,17 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import {
-  Plus,
-  Trash2,
-  ArrowLeft,
-  FolderOpen,
-  ImageIcon,
-  X,
-  Check,
-  Upload,
-  Pencil,
-} from "lucide-react";
+import { Plus, Trash2, FolderOpen, ImageIcon, X, Check } from "lucide-react";
 
 import AddAlbumModal from "@/app/Components/Gallery/Modal";
 import AlbumView from "@/app/Components/Gallery/ActiveGallery";

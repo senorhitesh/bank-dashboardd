@@ -59,4 +59,9 @@ body {
   align-items: center;
   gap: 4;
 }
-
+.bt{
+  transition: all .2s ease-in;
+}
+.bt:hover{
+color:#ff4242;
+}
