@@ -9,27 +9,24 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    // 'd-flex' replaces flex; 'vh-100' replaces h-screen
     <div className="d-flex vh-100" style={{ backgroundColor: "#fcfcfc" }}>
-      {/* Sidebar - Already converted to fixed position */}
+      {/* Sidebar - Position Fixed */}
       <SideNav />
 
-      {/* Main content area 
-          'flex-grow-1' replaces flex-1
-          'd-flex flex-column' handles the Header + Main stacking
-          'overflow-hidden' ensures the layout doesn't break if content is large
-      */}
+      {/* Main content area */}
       <div
-        className="flex-grow-1 d-flex flex-column overflow-hidden me-2"
-        style={{ marginLeft: "260px" }} // This matches the 260px width of your SideNav
+        className="flex-grow-1 d-flex flex-column overflow-hidden"
+        style={{ marginLeft: "260px" }}
       >
-        {/* Header - Stays sticky at the top of this container */}
         <Header />
 
-        {/* Main slot 
-            'overflow-auto' handles the internal scrolling for the dashboard pages
-        */}
-        <main className="flex-grow-1 overflow-auto p-3">{children}</main>
+        {/* Main slot */}
+        <main className="flex-grow-1 overflow-auto p-3">
+          {/* Wrapping children in container-fluid ensures 
+             the page content uses 100% of the available width 
+          */}
+          <div className="container-fluid">{children}</div>
+        </main>
       </div>
     </div>
   );

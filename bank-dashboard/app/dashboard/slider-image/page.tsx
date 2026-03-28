@@ -67,7 +67,7 @@ export default function SliderImagePage() {
         <div>
           <h2 className="h4 fw-bold text-dark mb-1">Slider Images</h2>
           <p className="small text-muted mb-0 d-flex align-items-center gap-2">
-            <Info size={14} className="flex-shrink-0" />
+            <Info size={14} className="shrink-0" />
             Recommended size: 1350 × 600 px
           </p>
         </div>

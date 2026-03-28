@@ -295,7 +295,7 @@ export default function BranchesPage() {
                       <td className="fw-bold text-dark">{branch.name}</td>
                       <td style={{ maxWidth: "220px" }}>
                         <div className="d-flex gap-2 align-items-start small text-muted">
-                          <MapPin size={14} className="mt-1 flex-shrink-0" />
+                          <MapPin size={14} className="mt-1 shrink-0" />
                           <span>{branch.location}</span>
                         </div>
                       </td>

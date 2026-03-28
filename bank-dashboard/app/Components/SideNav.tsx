@@ -212,7 +212,7 @@ const SideNav = () => {
       </div>
 
       {/* Navigation Area */}
-      <nav className="flex-grow-1 overflow-auto py-3 d-flex flex-column gap-1">
+      <nav className="grow overflow-auto py-3 d-flex flex-column gap-1">
         {NavMenus.map((item) => {
           const Icon = item.icon;
           const hasChildren = !!item.children;
@@ -306,12 +306,12 @@ const SideNav = () => {
       <div className="py-3 mt-auto border-top border-light">
         <div className="d-flex align-items-center gap-3 p-2 rounded-3 hover-bg-light transition-all">
           <div
-            className="d-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold flex-shrink-0"
+            className="d-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold shrink-0"
             style={{ width: "36px", height: "36px", fontSize: "12px" }}
           >
             AD
           </div>
-          <div className="flex-grow-1 overflow-hidden">
+          <div className="grow overflow-hidden">
             <p className="small fw-bold text-dark mb-0 text-truncate">Admin</p>
             <p
               className="text-muted mb-0 text-truncate"

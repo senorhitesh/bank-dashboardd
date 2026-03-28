@@ -203,7 +203,7 @@ const PopupCard = ({ popup }: { popup: Popup }) => {
       <div className="card-body d-flex align-items-center gap-3 p-1">
         {/* Thumbnail */}
         <div
-          className="rounded bg-light d-flex align-items-center justify-content-center overflow-hidden flex-shrink-0"
+          className="rounded bg-light d-flex align-items-center justify-content-center overflow-hidden shrink-0"
           style={{ width: "80px", height: "56px" }}
         >
           {popup.img ? (
@@ -218,7 +218,7 @@ const PopupCard = ({ popup }: { popup: Popup }) => {
         </div>
 
         {/* Info Content */}
-        <div className="flex-grow-1 min-width-0">
+        <div className="grow min-width-0">
           <div className="d-flex align-items-center gap-2 mb-1 flex-wrap">
             <p
               className="small fw-bold text-dark mb-0 text-truncate"
@@ -262,7 +262,7 @@ const PopupCard = ({ popup }: { popup: Popup }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="d-flex gap-1 flex-shrink-0">
+        <div className="d-flex gap-1 shrink-0">
           <button className="btn btn-sm btn-light text-muted border-0">
             <Pencil size={16} />
           </button>

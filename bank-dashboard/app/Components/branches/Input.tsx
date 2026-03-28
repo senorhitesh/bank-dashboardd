@@ -27,11 +27,6 @@ const Input = ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      /**
-       * 'form-control' is the core Bootstrap class for inputs.
-       * We combine it with the 'className' passed from the parent
-       * (which will contain things like 'is-invalid' or 'shadow-none').
-       */
       className={`form-control ${className}`}
     />
   );

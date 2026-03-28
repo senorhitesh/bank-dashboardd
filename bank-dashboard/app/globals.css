@@ -30,3 +30,33 @@ body {
 body {
   font-family: "Geist", Arial, sans-serif;
 }
+
+
+/* for Gallery */
+.small-icon-t{
+  color:#383838;
+  transition: all .1s ease;
+}
+.small-icon-t:focus{
+  scale: 95;
+}
+.small-icon-a:focus{
+  scale: 95;
+}
+.small-icon-t:hover{
+  color:#ff4242
+}
+.small-icon-a{
+  color:#383838;
+  transition: all .1s ease;
+}
+.small-icon-a:hover{
+  color:#1573FD
+}
+
+.icon-container{
+  display: flex;
+  align-items: center;
+  gap: 4;
+}
+
