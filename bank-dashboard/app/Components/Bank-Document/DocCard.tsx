@@ -51,10 +51,12 @@ function DocuCard({ card, deleteDocument }: DocuCardProps) {
             </div>
 
             <div className="flex-grow-1 overflow-hidden">
-              <div className="fw-semibold text-dark text-truncate">
+              <div
+                style={{ color: "#111" }}
+                className="fw-semibold  fs-4 text-truncate"
+              >
                 {card.title}
               </div>
-              <div className="text-muted small">{card.size}</div>
             </div>
           </div>
 
