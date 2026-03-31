@@ -65,3 +65,17 @@ body {
 .bt:hover{
 color:#ff4242;
 }
+
+/* For hover effects if not using a framework */
+.hover-danger:hover {
+  color: #dc3545 !important;
+  transition: color 0.2s ease;
+}
+
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+}

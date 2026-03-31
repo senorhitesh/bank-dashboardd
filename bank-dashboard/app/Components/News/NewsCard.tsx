@@ -58,16 +58,18 @@ export default function NewsCard({
       >
         <div className="d-flex align-items-center gap-2">
           <span
-            className={`badge rounded-pill fw-medium ${
-              expired
-                ? "bg-danger bg-opacity-15 text-danger"
+            className="badge rounded-pill fw-medium"
+            style={{
+              fontSize: 11,
+              padding: "4px 10px",
+              ...(expired
+                ? { backgroundColor: "#fee2e2", color: "#dc2626" }
                 : expiring
-                  ? "bg-warning bg-opacity-15 text-warning"
+                  ? { backgroundColor: "#fef3c7", color: "#d97706" }
                   : item.active
-                    ? "bg-success bg-opacity-15 text-success"
-                    : "bg-secondary bg-opacity-15 text-secondary"
-            }`}
-            style={{ fontSize: 11, padding: "3px 8px" }}
+                    ? { backgroundColor: "#dcfce7", color: "#16a34a" }
+                    : { backgroundColor: "#f3f4f6", color: "#4b5563" }), //
+            }}
           >
             {expired
               ? "Expired"
@@ -103,7 +105,7 @@ export default function NewsCard({
       <div className="px-3 py-3">
         <p
           className="mb-2 fw-medium text-dark"
-          style={{ fontSize: 14, lineHeight: 1.5 }}
+          style={{ fontSize: 14, lineHeight: 1.5, zIndex: 12, color: "#111" }}
         >
           {item.title}
         </p>
