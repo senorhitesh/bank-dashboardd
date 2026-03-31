@@ -160,7 +160,7 @@ export default function BankBoardPage() {
                 className={`badge rounded-pill ms-1 fw-normal ${
                   tab === t
                     ? "bg-primary"
-                    : "bg-secondary bg-opacity-15 text-secondary"
+                    : "bg-secondary bg-opacity-15 text-white"
                 }`}
                 style={{ fontSize: 10 }}
               >

@@ -23,7 +23,7 @@ import {
 import { HintText } from "@/components/base/input/hint-text";
 import { Label } from "@/components/base/input/label";
 import { Tooltip, TooltipTrigger } from "@/components/base/tooltip/tooltip";
-import { cx, sortCx } from "@/utils/cx";
+import { cx, sortCx } from "@/app/utils/cx";
 
 export interface InputBaseProps extends Omit<AriaInputProps, "size"> {
   /** Tooltip message on hover. */
