@@ -25,35 +25,43 @@ export default function NewsTicker({ items }: { items: NewsItem[] }) {
 
   return (
     <div
-      className="rounded-3 overflow-hidden border"
-      style={{ background: "#0a0f2e" }}
+      className="rounded-3 overflow-hidden"
+      style={{
+        background: "#0B1F3A",
+        boxShadow: "0 4px 12px rgba(220, 220, 220, 0.15)",
+      }}
     >
       {/* Channel header bar */}
       <div
         className="d-flex align-items-center justify-content-between px-3 py-1"
-        style={{ background: "#c0392b", minHeight: 32 }}
+        style={{ background: "#F1F5F9", minHeight: 32 }}
       >
         <div className="d-flex align-items-center gap-2">
           <div
-            className="rounded-1 px-2 py-0 fw-bold text-white"
+            className="rounded-1 px-2 py-0 fw-bold"
             style={{
-              background: "#e74c3c",
+              background: "#22C55E",
+              color: "#ffffff",
               fontSize: 11,
               letterSpacing: "0.08em",
-              border: "1px solid rgba(255,255,255,0.3)",
+              boxShadow: "0 0 6px rgba(34,197,94,0.6)",
             }}
           >
             LIVE
           </div>
-          <TvMinimal size={13} className="text-white opacity-75" />
+
+          {/* fixed typo */}
+          <TvMinimal size={13} className="text-black opacity-75" />
+
           <span
-            className="text-white fw-semibold"
+            className="text-black fw-semibold"
             style={{ fontSize: 12, letterSpacing: "0.05em" }}
           >
             BANK NEWS
           </span>
         </div>
-        <span className="text-white opacity-50" style={{ fontSize: 10 }}>
+
+        <span className="text-black opacity-50" style={{ fontSize: 10 }}>
           {active.length} active {active.length === 1 ? "update" : "updates"}
         </span>
       </div>
@@ -65,14 +73,14 @@ export default function NewsTicker({ items }: { items: NewsItem[] }) {
       >
         {/* Breaking news label */}
         <div
-          className="d-flex align-items-center justify-content-center flex-shrink-0 px-3 h-100 fw-bold text-white"
+          className="d-flex align-items-center justify-content-center flex-shrink-0 px-3 h-100 fw-bold"
           style={{
-            background: "#e74c3c",
             fontSize: 11,
             letterSpacing: "0.06em",
             minWidth: 110,
             zIndex: 2,
-            borderRight: "3px solid #c0392b",
+            background: "#E2E8F0",
+            color: "#0F172A",
           }}
         >
           Current
@@ -83,23 +91,24 @@ export default function NewsTicker({ items }: { items: NewsItem[] }) {
         {/* Scrolling text */}
         <div style={{ overflow: "hidden", flex: 1, position: "relative" }}>
           <style>{`
-            @keyframes ticker-scroll {
-              0%   { transform: translateX(100%); }
-              100% { transform: translateX(-100%); }
-            }
-            .ticker-track {
-              display: inline-block;
-              white-space: nowrap;
-              animation: ticker-scroll 25s linear infinite;
-            }
-            .ticker-track:hover { animation-play-state: paused; }
-          `}</style>
+        @keyframes ticker-scroll {
+          0%   { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+        .ticker-track {
+          display: inline-block;
+          white-space: nowrap;
+          animation: ticker-scroll 25s linear infinite;
+        }
+        .ticker-track:hover { animation-play-state: paused; }
+      `}</style>
+
           <div className="ticker-track">
             {active.map((item, i) => (
-              <span key={item.id} style={{ marginRight: 80 }}>
+              <span key={item.id} style={{ marginRight: 60 }}>
                 <span
                   style={{
-                    color: "#f39c12",
+                    color: "#FFC857",
                     fontWeight: 700,
                     fontSize: 13,
                     marginRight: 6,
@@ -107,13 +116,14 @@ export default function NewsTicker({ items }: { items: NewsItem[] }) {
                 >
                   ◆
                 </span>
+
                 {item.link && item.link !== "#" ? (
                   <a
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
-                      color: "#fff",
+                      color: "#F8FAFC",
                       textDecoration: "none",
                       fontSize: 13,
                       fontWeight: 500,
@@ -129,14 +139,23 @@ export default function NewsTicker({ items }: { items: NewsItem[] }) {
                   </a>
                 ) : (
                   <span
-                    style={{ color: "#fff", fontSize: 13, fontWeight: 500 }}
+                    style={{
+                      color: "#F8FAFC",
+                      fontSize: 13,
+                      fontWeight: 500,
+                    }}
                   >
                     {item.title}
                   </span>
                 )}
+
                 {i < active.length - 1 && (
                   <span
-                    style={{ color: "#e74c3c", marginLeft: 80, fontSize: 16 }}
+                    style={{
+                      color: "#FF6B6B",
+                      marginLeft: 60,
+                      fontSize: 16,
+                    }}
                   >
                     |
                   </span>
@@ -154,7 +173,7 @@ export default function NewsTicker({ items }: { items: NewsItem[] }) {
             top: 0,
             bottom: 0,
             width: 60,
-            background: "linear-gradient(to right, transparent, #0a0f2e)",
+            background: "linear-gradient(to right, transparent, #0B1F3A)",
             zIndex: 1,
             pointerEvents: "none",
           }}
