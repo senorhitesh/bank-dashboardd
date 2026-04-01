@@ -179,3 +179,15 @@ color:#ff4242;
 .ck-content .button--black {
 	background-color: #141517;
 }
+
+
+
+.btnnn{
+	transform:translateY(120);
+}
+
+.modalInnerDiv:hover .btnnn{
+	transform:translateY(0);
+	overflow: hidden;
+
+}

@@ -141,7 +141,6 @@ export default function SliderImagePage() {
           </div>
         </div>
 
-        {/* Image Cards */}
         {images.map((img) => (
           <MansonryCard
             key={img.id}

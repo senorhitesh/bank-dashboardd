@@ -58,12 +58,6 @@ const NavMenus: NavItem[] = [
     children: [
       { id: "popup", label: "Popup", icon: BellIcon, href: "/dashboard/popup" },
       {
-        id: "web-info",
-        label: "Web Info",
-        icon: Info,
-        href: "/dashboard/webinfo",
-      },
-      {
         id: "slider-image",
         label: "Slider Images",
         icon: Images,
