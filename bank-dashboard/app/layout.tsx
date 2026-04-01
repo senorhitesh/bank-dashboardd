@@ -29,8 +29,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* <script src="https://cdn.ckbox.io/ckbox/2.11.0/ckbox.js"></script> */}
+      </head>
       <body className="min-vh-100 d-flex flex-column">{children}</body>
-      <script src="https://cdn.ckbox.io/ckbox/2.11.0/ckbox.js"></script>
     </html>
   );
 }

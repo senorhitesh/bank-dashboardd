@@ -35,7 +35,7 @@ export default function WebInfoSettings() {
 
   const saveChanges = () => {
     setSavedData(formData);
-    toast.success("All changes saved to server!");
+    toast.success("All changes saved !");
   };
 
   const [activeTab, setActiveTab] = useState<TabType>("About");
@@ -213,8 +213,28 @@ export default function WebInfoSettings() {
                     <TextEditor />
                   </div>
                 )}
-                {activeTab === "Mission & Vision" && <TextEditor />}
-                {activeTab === "History" && <TextEditor />}
+                {activeTab === "Mission & Vision" && (
+                  <div
+                    style={{
+                      height: "250px", // or whatever fits your layout
+                      overflowY: "auto",
+                      overflowX: "hidden",
+                    }}
+                  >
+                    <TextEditor />
+                  </div>
+                )}
+                {activeTab === "History" && (
+                  <div
+                    style={{
+                      height: "250px", // or whatever fits your layout
+                      overflowY: "auto",
+                      overflowX: "hidden",
+                    }}
+                  >
+                    <TextEditor />
+                  </div>
+                )}
               </div>
             </div>
           </div>
