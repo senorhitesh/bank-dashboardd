@@ -64,9 +64,10 @@ export default function AddAlbumModal({
           </div>
           <button
             onClick={onClose}
-            className="btn btn-sm btn-light rounded-circle p-1"
+            style={{ width: 20, height: 20 }}
+            className="btn d-flex justify-content-center align-items-center  top-0 end-0 m-1 rounded-circle p-1"
           >
-            <X size={14} />
+            <X size={20} />
           </button>
         </div>
 
@@ -106,7 +107,8 @@ export default function AddAlbumModal({
                 <button
                   type="button"
                   onClick={() => setThumbnail("")}
-                  className="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-1"
+                  style={{ width: 20, height: 20 }}
+                  className="btn btn-sm btn-danger d-flex justify-content-center align-items-center position-absolute top-0 end-0 m-1 rounded-circle p-1"
                 >
                   <X size={12} />
                 </button>

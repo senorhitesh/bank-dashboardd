@@ -9,7 +9,7 @@ const LinkModal = ({
   formdata,
 }: {
   onClose: () => void;
-  formdata: (title: string, file: FileList | null) => void; // Changed to FileList to match input
+  formdata: (title: string, file: FileList) => void;
 }) => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [title, settitle] = useState<string>("");

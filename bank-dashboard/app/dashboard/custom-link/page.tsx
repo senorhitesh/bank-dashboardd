@@ -12,6 +12,7 @@ import {
   GripVertical,
 } from "lucide-react";
 import Input from "../../Components/branches/Input";
+import SearchInput from "@/app/Components/SearchInput";
 // --- Helpers (Unchanged) ---
 function getDomain(url: string): string {
   try {
@@ -309,13 +310,11 @@ export default function CustomLinkPage() {
               size={14}
               className="position-absolute top-50 start-0 translate-middle-y ms-2 text-muted"
             />
-            <input
+            <SearchInput
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search links..."
-              className="form-control form-control-sm ps-4"
-              style={{ width: "180px" }}
             />
           </div>
           <button

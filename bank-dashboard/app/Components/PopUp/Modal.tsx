@@ -29,7 +29,6 @@ interface ModalProps {
 // ─── Modal ────────────────────────────────────────────────────────────────────
 
 const Modal = ({ initials, onSave, onClose }: ModalProps) => {
-  // ✅ FIX 1: useState properly initialised from initials
   const [form, setForm] = useState({
     img: initials?.img ?? "",
     title: initials?.title ?? "",
@@ -42,7 +41,6 @@ const Modal = ({ initials, onSave, onClose }: ModalProps) => {
   const [preview, setPreview] = useState(initials?.img ?? "");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // ✅ FIX 2: set() written correctly — was `setForm((prev)=>{...prev}, [k]: v)`
   function set<K extends keyof typeof form>(k: K, v: (typeof form)[K]) {
     setForm((prev) => ({ ...prev, [k]: v }));
   }
@@ -58,11 +56,11 @@ const Modal = ({ initials, onSave, onClose }: ModalProps) => {
   function validate() {
     const e: typeof errors = {};
     if (!form.title.trim()) e.title = "Title is required";
+
     setErrors(e);
     return !Object.keys(e).length;
   }
 
-  // ✅ FIX 3: onSubmit type was `React.SubmitEvent<HTMLFormElement>` (doesn't exist)
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (validate()) {
@@ -145,7 +143,6 @@ const Modal = ({ initials, onSave, onClose }: ModalProps) => {
                 </div>
               )}
             </div>
-            {/* ✅ FIX 4: input was outside the else block in original so it was missing when img existed */}
             <input
               ref={inputRef}
               type="file"

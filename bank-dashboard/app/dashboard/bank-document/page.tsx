@@ -5,6 +5,7 @@ import Noducment from "../../Components/Bank-Document/Noducment";
 import { useState } from "react";
 import DocuCard from "@/app/Components/Bank-Document/DocCard";
 import LinkModal from "../../Components/Bank-Document/Modal";
+import SearchInput from "@/app/Components/SearchInput";
 
 // Unified interface to match DocuCard expectations
 export interface docuProp {
@@ -19,7 +20,7 @@ export interface docuProp {
 const Page = () => {
   const [modalOpen, setmodalOpen] = useState<boolean>(false);
   const [documentData, setdocumentData] = useState<docuProp[]>([]);
-
+  const [search, setSearch] = useState<string>("");
   function formData(title: string, file: File[] | null) {
     if (!file || file.length === 0) return;
 
@@ -44,6 +45,10 @@ const Page = () => {
     setdocumentData((prev) => prev.filter((a) => a.id !== cardId));
   }
 
+  const filtered = documentData.filter((u) =>
+    u.title.toLowerCase().includes(search.toLowerCase()),
+  );
+
   return (
     <div className="container-fluid p-1">
       {modalOpen && (
@@ -64,11 +69,11 @@ const Page = () => {
               size={14}
               className="position-absolute top-50 start-0 translate-middle-y ms-2 text-muted"
             />
-            <input
+            <SearchInput
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               type="text"
               placeholder="Search links..."
-              className="form-control form-control-sm ps-4"
-              style={{ width: "180px" }}
             />
           </div>
           <button
@@ -82,12 +87,12 @@ const Page = () => {
 
       {/* Grid Section */}
       <div className="row g-3">
-        {documentData.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="col-12">
             <Noducment />
           </div>
         ) : (
-          documentData.map((card) => (
+          filtered.map((card) => (
             <div key={card.id} className="col-12 col-md-6 ">
               <DocuCard deleteDocument={deleteDocument} card={card} />
             </div>

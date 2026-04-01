@@ -8,12 +8,6 @@ import {
   Plus,
   Eye,
   ImageIcon,
-  AlertCircle,
-  Pencil,
-  Trash2,
-  X,
-  Check,
-  Calendar,
 } from "lucide-react";
 import Modal from "@/app/Components/PopUp/Modal";
 import AnalayticCard from "@/app/Components/AnalayticCard";
@@ -37,7 +31,7 @@ interface Popup {
 }
 
 type Tab = "All" | "Published" | "Draft";
-
+import PopupCard from "@/app/Components/PopUp/PopupCard";
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const POPUPS: Popup[] = [
@@ -51,187 +45,7 @@ const POPUPS: Popup[] = [
       { title: "Visible on homepage", icon: Eye, color: "text-success" },
     ],
   },
-  {
-    id: 2,
-    img: "",
-    title: "Whatsapp Banking",
-    status: "Draft",
-    lastUpdate: "Updated 2025-02-22",
-    statusDetails: [
-      { title: "No image added", icon: ImageIcon, color: "text-warning" },
-    ],
-  },
-  {
-    id: 3,
-    img: "https://cdn.dribbble.com/userupload/42943587/file/original-6d6ae09a281ada539c8e899e54798f4d.png?format=webp&resize=400x300&vertical=center",
-    title: "Mobile Banking Launch",
-    status: "Published",
-    lastUpdate: "Updated 2025-01-15",
-    statusDetails: [
-      { title: "Visible on homepage", icon: Eye, color: "text-success" },
-    ],
-  },
-  {
-    id: 4,
-    img: "https://cdn.dribbble.com/userupload/42943587/file/original-6d6ae09a281ada539c8e899e54798f4d.png?format=webp&resize=400x300&vertical=center",
-    title: "Holiday Notice 2025",
-    status: "Draft",
-    lastUpdate: "Updated 2025-03-10",
-    statusDetails: [
-      { title: "Pending review", icon: AlertCircle, color: "text-warning" },
-    ],
-  },
-  {
-    id: 5,
-    img: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/light-blue-digital-banking-app-advert-design-template-44cceb4d3cb46b9981b8032604f54999_screen.jpg?ts=1698151548",
-    title: "ATM Service Downtime",
-    status: "Draft",
-    lastUpdate: "Updated 2025-03-18",
-    statusDetails: [],
-  },
-  {
-    id: 6,
-    img: "",
-    title: "Untitled popup",
-    status: "Draft",
-    lastUpdate: "",
-    statusDetails: [
-      {
-        title: "Missing title and image",
-        icon: AlertCircle,
-        color: "text-danger",
-      },
-    ],
-  },
 ];
-
-// ─── Popup Card ───────────────────────────────────────────────────────────────
-
-function PopupCard({
-  popup,
-  onEdit,
-  onDelete,
-}: {
-  popup: Popup;
-  onEdit: () => void;
-  onDelete: () => void;
-}) {
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
-  return (
-    <div
-      className="d-flex align-items-center gap-3 p-3 bg-white border rounded-3"
-      style={{
-        boxShadow: "0 1px 3px rgba(0,0,0,.05)",
-        transition: "box-shadow .15s",
-      }}
-      onMouseEnter={(e) =>
-        (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,.09)")
-      }
-      onMouseLeave={(e) =>
-        (e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,.05)")
-      }
-    >
-      {/* Thumbnail */}
-      <div
-        className="rounded-3 overflow-hidden flex-shrink-0 bg-light d-flex align-items-center justify-content-center border"
-        style={{ width: 80, height: 56 }}
-      >
-        {popup.img ? (
-          <img
-            src={popup.img}
-            alt={popup.title}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        ) : (
-          <ImageIcon size={18} className="text-secondary opacity-40" />
-        )}
-      </div>
-
-      {/* Info */}
-      <div className="flex-fill min-w-0">
-        <div className="d-flex align-items-center gap-2 mb-1 flex-wrap">
-          <p className="mb-0 fw-medium text-dark" style={{ fontSize: 13 }}>
-            {popup.title}
-          </p>
-          <span
-            className={`badge rounded-pill fw-medium ${
-              popup.status === "Published"
-                ? "bg-success bg-opacity-15 text-success"
-                : "bg-warning bg-opacity-15 text-warning"
-            }`}
-            style={{ fontSize: 10, padding: "3px 9px" }}
-          >
-            {popup.status}
-          </span>
-        </div>
-        <div className="d-flex align-items-center gap-3 flex-wrap">
-          {popup.lastUpdate && (
-            <span
-              className="d-flex align-items-center gap-1 text-muted"
-              style={{ fontSize: 11 }}
-            >
-              <Calendar size={10} /> {popup.lastUpdate}
-            </span>
-          )}
-          {/* ✅ FIX: was `popup.statusDetails?.title` — statusDetails is an array, must map */}
-          {popup.statusDetails.map((d, i) => {
-            const Icon = d.icon;
-            return (
-              <span
-                key={i}
-                className={`d-flex align-items-center gap-1 ${d.color}`}
-                style={{ fontSize: 11 }}
-              >
-                <Icon size={11} /> {d.title}
-              </span>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="d-flex align-items-center gap-1 flex-shrink-0">
-        {confirmDelete ? (
-          <>
-            <span className="text-muted me-1" style={{ fontSize: 11 }}>
-              Delete?
-            </span>
-            <button
-              onClick={onDelete}
-              className="btn btn-danger btn-sm p-1 lh-1"
-            >
-              <Check size={11} />
-            </button>
-            <button
-              onClick={() => setConfirmDelete(false)}
-              className="btn btn-light btn-sm p-1 lh-1"
-            >
-              <X size={11} />
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={onEdit}
-              className="btn btn-light btn-sm p-1 lh-1"
-              title="Edit"
-            >
-              <Pencil size={13} className="text-secondary" />
-            </button>
-            <button
-              onClick={() => setConfirmDelete(true)}
-              className="btn btn-light btn-sm p-1 lh-1"
-              title="Delete"
-            >
-              <Trash2 size={13} className="text-danger" />
-            </button>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -254,7 +68,6 @@ const PopupPage = () => {
   const tabCount = (tab: Tab) =>
     tab === "All" ? data.length : data.filter((p) => p.status === tab).length;
 
-  // ✅ FIX: onSave now correctly adds or edits instead of always pushing
   function onSave(formData: Omit<Popup, "id" | "statusDetails">) {
     if (modal === "edit" && editTarget) {
       setData((prev) =>
@@ -297,7 +110,6 @@ const PopupPage = () => {
     return details;
   }
 
-  // ✅ FIX: deletePopup was filtering wrong — was `u.id === poupId` (keeps only that one)
   function deletePopup(popupId: number) {
     setData((prev) => prev.filter((u) => u.id !== popupId));
   }

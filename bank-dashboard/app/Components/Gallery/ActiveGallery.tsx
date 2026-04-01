@@ -188,7 +188,6 @@ export default function AlbumView({
               </div>
             </div>
           ))}
-          {/* Upload slot */}
           <div className="col-6 col-md-4 col-lg-3">
             <div
               onClick={() => fileRef.current?.click()}
@@ -196,7 +195,6 @@ export default function AlbumView({
               style={{
                 minHeight: 110,
                 cursor: "pointer",
-                paddingBottom: "75%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",

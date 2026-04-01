@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2, X, Check, Users2, Search } from "lucide-react";
 import MemberModal from "@/app/Components/Bank-Board/MemberModal";
 import MemberCard from "@/app/Components/Bank-Board/MemberCard";
 import MemberGroup from "@/app/Components/Bank-Board/MemberGroup";
+import SearchInput from "@/app/Components/SearchInput";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -119,11 +120,9 @@ export default function BankBoardPage() {
                 size={13}
                 className="position-absolute top-50 start-0 translate-middle-y ms-2 text-muted"
               />
-              <input
+              <SearchInput
                 type="text"
                 placeholder="Search members..."
-                className="form-control form-control-sm ps-4"
-                style={{ width: 180 }}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />

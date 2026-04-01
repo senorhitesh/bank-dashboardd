@@ -15,6 +15,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import SearchInput from "@/app/Components/SearchInput";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -210,9 +211,8 @@ export default function UsersPage() {
               <span className="input-group-text bg-light border-end-0">
                 <Search size={13} className="text-secondary" />
               </span>
-              <input
+              <SearchInput
                 type="text"
-                className="form-control border-start-0 ps-0"
                 placeholder="Search for User Name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

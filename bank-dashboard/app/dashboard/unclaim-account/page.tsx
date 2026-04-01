@@ -14,6 +14,7 @@ import {
   Download,
 } from "lucide-react";
 import * as XLSX from "xlsx";
+import SearchInput from "@/app/Components/SearchInput";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -358,9 +359,8 @@ export default function UnclaimAccountPage() {
             <span className="input-group-text bg-light border-end-0">
               <Search size={12} className="text-secondary" />
             </span>
-            <input
+            <SearchInput
               type="text"
-              className="form-control border-start-0 ps-0"
               placeholder="Search name, address, UDRN..."
               value={search}
               onChange={(e) => {

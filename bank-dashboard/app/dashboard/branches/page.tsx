@@ -15,12 +15,12 @@ import {
 } from "lucide-react";
 
 import Field from "../../Components/branches/Field";
-import Th from "../../Components/branches/Th";
 import Input from "../../Components/branches/Input";
 import LockerToggle from "@/app/Components/branches/LockerToggle";
 import ModalHeader from "@/app/Components/branches/ModalHeader";
 import TableFooter from "@/app/Components/branches/TableFooter";
 import TableHead from "@/app/Components/branches/TableHead";
+import SearchInput from "@/app/Components/SearchInput";
 
 // --- Types & Mock Data ---
 interface Branch {
@@ -164,7 +164,7 @@ function BranchModal({
               >
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary px-4">
+              <button type="submit" className="btn btn-md btn-primary px-4">
                 {initial ? "Save changes" : "Add branch"}
               </button>
             </div>
@@ -254,12 +254,11 @@ export default function BranchesPage() {
                 size={16}
                 className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
               />
-              <input
+              <SearchInput
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search branches..."
-                className="form-control ps-5 shadow-none"
               />
             </div>
           </div>

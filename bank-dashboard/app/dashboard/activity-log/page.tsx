@@ -10,6 +10,7 @@ import {
   Clock,
 } from "lucide-react";
 import ViewLogModal from "@/app/Components/Activity-Log/ViewLogModal";
+import SearchInput from "@/app/Components/SearchInput";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface ChangeProp {
@@ -348,11 +349,9 @@ export default function ActivityLogPage() {
               size={13}
               className="position-absolute top-50 start-0 translate-middle-y ms-2 text-muted"
             />
-            <input
+            <SearchInput
               type="text"
               placeholder="Search user, page, activity..."
-              className="form-control form-control-sm ps-4"
-              style={{ width: 220 }}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
