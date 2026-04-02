@@ -193,6 +193,7 @@ const PopupPage = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setSearch(e.target.value)
             }
+            placeholder="Search by title"
           />
         </div>
 

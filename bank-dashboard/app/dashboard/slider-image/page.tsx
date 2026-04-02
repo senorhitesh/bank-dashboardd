@@ -87,8 +87,6 @@ export default function SliderImagePage() {
         />
       </div>
 
-      {/* Masonry Grid Logic */}
-      {/* We use inline styles for responsive columns as Bootstrap doesn't have native masonry classes */}
       <div
         className="masonry-grid"
         style={{
