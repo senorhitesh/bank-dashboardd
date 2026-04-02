@@ -8,6 +8,8 @@ import {
   Check,
   X,
   FileText,
+  Globe,
+  PenLine,
 } from "lucide-react";
 import { useState } from "react";
 import ActivePage from "@/app/Components/CustomPage/ActivePage";
@@ -25,6 +27,7 @@ interface DataProp {
 interface SubPageProp {
   id: number;
   name: string;
+  status: "Published" | "Draft"; // ← now tracked per sub-page
 }
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -35,11 +38,11 @@ const DATA: DataProp[] = [
     parentPage: "About",
     state: "Published",
     subPage: [
-      { id: 1, name: "About" },
-      { id: 2, name: "Board Of Director" },
-      { id: 3, name: "Gallery" },
-      { id: 4, name: "Download" },
-      { id: 5, name: "Branches" },
+      { id: 1, name: "About", status: "Published" },
+      { id: 2, name: "Board Of Director", status: "Published" },
+      { id: 3, name: "Gallery", status: "Draft" },
+      { id: 4, name: "Download", status: "Published" },
+      { id: 5, name: "Branches", status: "Published" },
     ],
   },
   {
@@ -47,10 +50,10 @@ const DATA: DataProp[] = [
     parentPage: "Deposit",
     state: "Published",
     subPage: [
-      { id: 1, name: "Saving Account" },
-      { id: 2, name: "Current Account" },
-      { id: 3, name: "Recurring Deposit" },
-      { id: 4, name: "Fixed Deposits" },
+      { id: 1, name: "Saving Account", status: "Published" },
+      { id: 2, name: "Current Account", status: "Published" },
+      { id: 3, name: "Recurring Deposit", status: "Draft" },
+      { id: 4, name: "Fixed Deposits", status: "Published" },
     ],
   },
   {
@@ -58,13 +61,13 @@ const DATA: DataProp[] = [
     parentPage: "Loans",
     state: "Published",
     subPage: [
-      { id: 1, name: "Agriculture Loans" },
-      { id: 2, name: "Individual Loans" },
-      { id: 3, name: "Loan Against Salary" },
-      { id: 4, name: "Gold Loan Schemes" },
-      { id: 5, name: "Housing Loans" },
-      { id: 6, name: "Education Loans" },
-      { id: 7, name: "Vehicle Loans" },
+      { id: 1, name: "Agriculture Loans", status: "Published" },
+      { id: 2, name: "Individual Loans", status: "Published" },
+      { id: 3, name: "Loan Against Salary", status: "Draft" },
+      { id: 4, name: "Gold Loan Schemes", status: "Published" },
+      { id: 5, name: "Housing Loans", status: "Published" },
+      { id: 6, name: "Education Loans", status: "Published" },
+      { id: 7, name: "Vehicle Loans", status: "Draft" },
     ],
   },
   {
@@ -72,13 +75,13 @@ const DATA: DataProp[] = [
     parentPage: "Service",
     state: "Published",
     subPage: [
-      { id: 1, name: "RTGS / NEFT" },
-      { id: 2, name: "Safe Deposit Locker" },
-      { id: 3, name: "ATM Facility" },
-      { id: 4, name: "MSEB Bill Centre" },
-      { id: 5, name: "SMS Alert" },
-      { id: 6, name: "Mobile ATM Van" },
-      { id: 7, name: "Mpassbook Mobile App" },
+      { id: 1, name: "RTGS / NEFT", status: "Published" },
+      { id: 2, name: "Safe Deposit Locker", status: "Published" },
+      { id: 3, name: "ATM Facility", status: "Published" },
+      { id: 4, name: "MSEB Bill Centre", status: "Draft" },
+      { id: 5, name: "SMS Alert", status: "Published" },
+      { id: 6, name: "Mobile ATM Van", status: "Published" },
+      { id: 7, name: "Mpassbook Mobile App", status: "Draft" },
     ],
   },
   {
@@ -86,10 +89,10 @@ const DATA: DataProp[] = [
     parentPage: "Know More",
     state: "Published",
     subPage: [
-      { id: 1, name: "Bank Holiday" },
-      { id: 2, name: "Deposit Interest Rate" },
-      { id: 3, name: "Loan Interest Rate" },
-      { id: 4, name: "Service Charges" },
+      { id: 1, name: "Bank Holiday", status: "Published" },
+      { id: 2, name: "Deposit Interest Rate", status: "Published" },
+      { id: 3, name: "Loan Interest Rate", status: "Published" },
+      { id: 4, name: "Service Charges", status: "Draft" },
     ],
   },
 ];
@@ -98,7 +101,6 @@ const DATA: DataProp[] = [
 
 const CustomPagePage = () => {
   const [pageData, setPageData] = useState<DataProp[]>(DATA);
-  // ✅ FIX 1: openId controls which accordion is open — not hover-only
   const [openId, setOpenId] = useState<number | null>(1);
   const [activePage, setActivePage] = useState(false);
   const [targetSubPage, setTargetSubPage] = useState<SubPageProp | undefined>();
@@ -110,25 +112,31 @@ const CustomPagePage = () => {
     subId: number;
   } | null>(null);
 
-  // ── CRUD ──────────────────────────────────────────────────────────────────
-
+  // ── Add sub-page ────────────────────────────────────────────────────────────
   function onAddSubPage(parent: string, title: string) {
     setPageData((prev) =>
       prev.map((k) =>
         k.parentPage === parent
-          ? { ...k, subPage: [...k.subPage, { id: Date.now(), name: title }] }
+          ? {
+              ...k,
+              subPage: [
+                ...k.subPage,
+                { id: Date.now(), name: title, status: "Draft" as const },
+              ],
+            }
           : k,
       ),
     );
   }
 
-  // ✅ FIX 2: onSave from ActivePage was never wired up — now updates name and re-parents
+  // ── Save from editor — updates name, parent, and status ────────────────────
   function onSavePage(
     pageId: number,
     subPageId: number,
     newName: string,
     newParent: string,
     _content: string,
+    status: "Published" | "Draft",
   ) {
     setPageData((prev) => {
       // Remove from old parent
@@ -137,10 +145,13 @@ const CustomPagePage = () => {
           ? { ...p, subPage: p.subPage.filter((s) => s.id !== subPageId) }
           : p,
       );
-      // Add to new parent with updated name
+      // Add to new parent with updated name + status
       return removed.map((p) =>
         p.parentPage === newParent
-          ? { ...p, subPage: [...p.subPage, { id: subPageId, name: newName }] }
+          ? {
+              ...p,
+              subPage: [...p.subPage, { id: subPageId, name: newName, status }],
+            }
           : p,
       );
     });
@@ -148,6 +159,7 @@ const CustomPagePage = () => {
     setParentPage("");
   }
 
+  // ── Delete sub-page ─────────────────────────────────────────────────────────
   function deleteSubPage(pageId: number, subPageId: number) {
     setPageData((prev) =>
       prev.map((page) =>
@@ -162,12 +174,12 @@ const CustomPagePage = () => {
     setDeleteTarget(null);
   }
 
-  // ── Render ────────────────────────────────────────────────────────────────
-
+  // ── Editor view ─────────────────────────────────────────────────────────────
   if (activePage) {
     return (
       <ActivePage
         initial={targetSubPage}
+        initialStatus={targetSubPage?.status ?? "Draft"}
         onBack={() => {
           setActivePage(false);
           setParentPage("");
@@ -179,6 +191,12 @@ const CustomPagePage = () => {
       />
     );
   }
+
+  const totalPages = pageData.reduce((acc, p) => acc + p.subPage.length, 0);
+  const draftCount = pageData.reduce(
+    (acc, p) => acc + p.subPage.filter((s) => s.status === "Draft").length,
+    0,
+  );
 
   return (
     <div className="d-flex flex-column gap-4">
@@ -197,8 +215,12 @@ const CustomPagePage = () => {
             Custom Pages
           </h2>
           <p className="text-muted mb-0" style={{ fontSize: 13 }}>
-            {pageData.reduce((acc, p) => acc + p.subPage.length, 0)} pages
-            across {pageData.length} sections
+            {totalPages} pages across {pageData.length} sections
+            {draftCount > 0 && (
+              <span className="ms-2" style={{ color: "#f59e0b" }}>
+                · {draftCount} drafts
+              </span>
+            )}
           </p>
         </div>
         <button
@@ -209,10 +231,14 @@ const CustomPagePage = () => {
         </button>
       </div>
 
-      {/* ✅ FIX 3: was a horizontal hover menu — replaced with click-to-open accordion */}
+      {/* Accordion */}
       <div className="d-flex flex-column gap-2">
         {pageData.map((section) => {
           const isOpen = openId === section.id;
+          const sectionDrafts = section.subPage.filter(
+            (s) => s.status === "Draft",
+          ).length;
+
           return (
             <div
               key={section.id}
@@ -248,6 +274,18 @@ const CustomPagePage = () => {
                   >
                     {section.subPage.length}
                   </span>
+                  {sectionDrafts > 0 && (
+                    <span
+                      className="badge fw-normal"
+                      style={{
+                        fontSize: 10,
+                        background: "#fef3c7",
+                        color: "#92400e",
+                      }}
+                    >
+                      {sectionDrafts} draft{sectionDrafts > 1 ? "s" : ""}
+                    </span>
+                  )}
                 </div>
                 <ChevronDown
                   size={16}
@@ -282,8 +320,39 @@ const CustomPagePage = () => {
                           (e.currentTarget.style.background = "transparent")
                         }
                       >
-                        <span className="text-dark">{child.name}</span>
+                        {/* Name + status badge */}
+                        <div className="d-flex align-items-center gap-2">
+                          <span className="text-dark">{child.name}</span>
+                          <span
+                            className="d-flex align-items-center gap-1 fw-medium"
+                            style={{
+                              fontSize: 10,
+                              padding: "2px 8px",
+                              borderRadius: 20,
+                              background:
+                                child.status === "Published"
+                                  ? "#dcfce7"
+                                  : "#f3f4f6",
+                              color:
+                                child.status === "Published"
+                                  ? "#166534"
+                                  : "#6b7280",
+                              border: `1px solid ${child.status === "Published" ? "#bbf7d0" : "#e5e7eb"}`,
+                            }}
+                          >
+                            {child.status === "Published" ? (
+                              <>
+                                <Globe size={9} /> Published
+                              </>
+                            ) : (
+                              <>
+                                <PenLine size={9} /> Draft
+                              </>
+                            )}
+                          </span>
+                        </div>
 
+                        {/* Actions */}
                         <div className="d-flex align-items-center gap-1">
                           {deleteTarget?.pageId === section.id &&
                           deleteTarget?.subId === child.id ? (
@@ -342,7 +411,6 @@ const CustomPagePage = () => {
                     ))
                   )}
 
-                  {/* Quick add link */}
                   <button
                     onClick={() => setAddModal(true)}
                     className="btn btn-sm btn-link text-primary d-flex align-items-center gap-1 p-2"
