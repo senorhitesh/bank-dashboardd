@@ -48,21 +48,10 @@ const ActivePage = ({
   const [title, setTitle] = useState(initial?.name ?? "");
   const [selectedParent, setSelectedParent] = useState(parentPage);
   const [selectedParentId, setSelectedParentId] = useState(parentPageId);
-  const [dropDown, setDropDown] = useState(false);
   const [content, setContent] = useState("");
   const [status, setStatus] = useState<"Published" | "Draft">(initialStatus);
   const [savedAs, setSavedAs] = useState<"Published" | "Draft" | null>(null);
   const dropRef = useRef<HTMLDivElement>(null);
-
-  // Close parent dropdown on outside click
-  useEffect(() => {
-    function handle(e: MouseEvent) {
-      if (dropRef.current && !dropRef.current.contains(e.target as Node))
-        setDropDown(false);
-    }
-    document.addEventListener("mousedown", handle);
-    return () => document.removeEventListener("mousedown", handle);
-  }, []);
 
   function handleSave(saveAs: "Published" | "Draft") {
     if (!initial) return;
@@ -200,7 +189,6 @@ const ActivePage = ({
           <div className="position-relative d-inline-block" ref={dropRef}>
             <button
               type="button"
-              onClick={() => setDropDown((v) => !v)}
               className="btn border-0 p-0 d-flex align-items-center gap-1"
               style={{
                 fontSize: 28,
@@ -210,58 +198,11 @@ const ActivePage = ({
               }}
             >
               {selectedParent}
-              <ChevronDown
-                size={20}
-                style={{
-                  transition: "transform .2s",
-                  transform: dropDown ? "rotate(180deg)" : "rotate(0deg)",
-                  color: "#6b7280",
-                  marginTop: 2,
-                }}
-              />
             </button>
-
-            {dropDown && (
-              <div
-                className="position-absolute bg-white rounded-3 border shadow-sm py-1"
-                style={{
-                  top: "calc(100% + 4px)",
-                  left: 0,
-                  zIndex: 200,
-                  minWidth: 200,
-                }}
-              >
-                {pageData.map((val) => (
-                  <button
-                    key={val.id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedParent(val.parentPage);
-                      setSelectedParentId(val.id);
-                      setDropDown(false);
-                    }}
-                    className="btn border-0 w-100 text-start d-flex align-items-center justify-content-between px-3 py-2"
-                    style={{
-                      fontSize: 13,
-                      color:
-                        selectedParent === val.parentPage
-                          ? "#2563eb"
-                          : "#374151",
-                    }}
-                  >
-                    <span>{val.parentPage}</span>
-                    {selectedParent === val.parentPage && (
-                      <Check size={14} className="text-primary" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </div>
 
-      {/* ── Web content ── */}
       <div>
         <p
           style={{

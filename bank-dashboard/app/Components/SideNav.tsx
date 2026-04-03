@@ -10,7 +10,6 @@ import {
   Globe,
   ImageIcon,
   Images,
-  Info,
   Link2,
   LayoutDashboard,
   Map,
@@ -185,8 +184,6 @@ const SideNav = () => {
   };
 
   return (
-    // position-fixed, top-0, and start-0 handle the alignment
-    // We use inline styles for the specific 64px width and custom height
     <aside
       className="position-fixed top-0 start-0 d-flex flex-column bg-white border-end shadow-sm"
       style={{
@@ -316,7 +313,8 @@ const SideNav = () => {
           </div>
           <button
             onClick={handleLogout}
-            className="btn btn-sm btn-light text-muted p-1 rounded-2 border-0"
+            style={{ width: "40px", height: "40px" }}
+            className="btn btn-sm btn-light text-muted d-flex justify-content-center align-items-center rounded-circle border-0"
             title="Sign out"
           >
             <LogOut size={16} />

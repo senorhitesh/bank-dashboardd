@@ -2,7 +2,6 @@
 
 import {
   ChevronDown,
-  Pencil,
   Plus,
   Trash2,
   Check,
@@ -139,7 +138,6 @@ const CustomPagePage = () => {
     status: "Published" | "Draft",
   ) {
     setPageData((prev) => {
-      // Remove from old parent
       const removed = prev.map((p) =>
         p.id === pageId
           ? { ...p, subPage: p.subPage.filter((s) => s.id !== subPageId) }
@@ -310,9 +308,19 @@ const CustomPagePage = () => {
                   ) : (
                     section.subPage.map((child) => (
                       <div
+                        onClick={() => {
+                          setActivePage(true);
+                          setTargetSubPage(child);
+                          setParentPage(section.parentPage);
+                          setParentPageId(section.id);
+                        }}
                         key={child.id}
                         className="d-flex align-items-center justify-content-between px-3 py-2 rounded-2"
-                        style={{ fontSize: 13, transition: "background .1s" }}
+                        style={{
+                          fontSize: 13,
+                          transition: "background .1s",
+                          cursor: "pointer",
+                        }}
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.background = "#f8fafc")
                         }
@@ -389,9 +397,7 @@ const CustomPagePage = () => {
                                 }}
                                 className="btn btn-light btn-sm p-1 lh-1"
                                 title="Edit"
-                              >
-                                <Pencil size={13} className="text-secondary" />
-                              </button>
+                              ></button>
                               <button
                                 onClick={() =>
                                   setDeleteTarget({

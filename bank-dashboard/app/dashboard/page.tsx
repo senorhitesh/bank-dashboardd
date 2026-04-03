@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 import AnalayticCard from "../Components/AnalayticCard";
 import { Edit02 } from "@untitledui/icons";
+import { useRouter } from "next/navigation";
 
-// --- InfoRow Sub-component ---
 const InfoRow = ({
   icon: Icon,
   label,
@@ -25,7 +25,6 @@ const InfoRow = ({
   value: string;
 }) => {
   return (
-    // d-flex replaces flex; border-bottom handles the separators
     <div className="d-flex align-items-start gap-3 py-3 border-bottom border-light last-child-border-0">
       {/* Icon Container */}
       <div
@@ -45,18 +44,30 @@ const InfoRow = ({
 };
 
 export default function DashboardPage() {
+  const router = useRouter();
+  function handleEdit() {
+    router.push("/dashboard/personal-details");
+  }
+
   return (
     <div className="d-flex flex-column gap-4">
       {/* 1. Header & Analytics Title */}
       <div className="d-flex align-items-center justify-content-between">
         <h2 className="h5 fw-bold text-dark mb-0">Analytics</h2>
-        <div
-          className="btn btn-white border shadow-sm d-flex align-items-center gap-2 py-1 px-3 rounded-2 transition-all"
-          style={{ cursor: "pointer" }}
+        <a
+          style={{ textDecoration: "none" }}
+          target="_blanck"
+          href="https://uat.chandrapurdccb.bank.in/"
         >
-          <span className="small fw-bold text-dark">Visit Site</span>
-          <ArrowUpRight size={14} className="text-muted" />
-        </div>
+          {" "}
+          <div
+            className="btn btn-white border shadow-sm d-flex align-items-center gap-2 py-1 px-3 rounded-2 transition-all"
+            style={{ cursor: "pointer" }}
+          >
+            <span className="small fw-bold text-dark">Visit Site</span>
+            <ArrowUpRight size={14} className="text-muted" />
+          </div>
+        </a>
       </div>
 
       {/* 2. Analytics Cards Grid */}
@@ -89,7 +100,10 @@ export default function DashboardPage() {
               <p className="small fw-bold text-muted text-uppercase mb-0 tracking-wider">
                 Details
               </p>
-              <button className="btn btn-link p-0 text-muted hover-primary transition-all">
+              <button
+                onClick={handleEdit}
+                className="btn btn-link p-0 text-muted hover-primary transition-all"
+              >
                 <Edit02 size={18} />
               </button>
             </div>
@@ -148,7 +162,12 @@ export default function DashboardPage() {
             <h2 className="h6 fw-bold text-dark mb-0">News & Notifications</h2>
             <span className="badge rounded-pill bg-primary px-3 ms-2">New</span>
           </div>
-          <button className="btn btn-light btn-sm rounded-circle p-1">
+          <button
+            onClick={() => {
+              router.push("/dashboard/news");
+            }}
+            className="btn btn-light btn-sm rounded-circle p-1"
+          >
             <Plus size={18} className="text-muted" />
           </button>
         </div>

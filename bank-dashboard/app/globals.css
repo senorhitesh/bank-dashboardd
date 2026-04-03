@@ -237,3 +237,11 @@ background-color: #f7f7f7;
 .state2:hover{
 	color: #ff1d1d;
 }
+
+.setting-card {
+  transition: background-color 0.2s ease;
+}
+
+.setting-card:hover {
+  background-color: #fafafa; /* subtle grey */
+}
