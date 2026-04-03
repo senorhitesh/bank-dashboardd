@@ -4,19 +4,19 @@ import {
   ArrowLeft,
   Camera,
   IdCard,
-  User,
+  VenusAndMars,
   ShieldCheck,
   Mail,
   LucideIcon,
-  X,
-  Eye,
-  EyeOff,
   Check,
+  BriefcaseBusiness,
+  Upload,
+  Trash,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import SettingCard from "../Components/Setting/SettingCard";
-
+import SettingModal from "../Components/Setting/SettingModal";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface PdProp {
@@ -26,133 +26,21 @@ interface PdProp {
   value: string;
   isPassword?: boolean;
 }
-
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const PROFILE_DATA: PdProp[] = [
   { id: 1, icon: IdCard, title: "Full Name", value: "Admin" },
-  { id: 2, icon: User, title: "Gender", value: "Male" },
-  { id: 3, icon: Mail, title: "Email Address", value: "a@a.com" },
+  { id: 2, icon: BriefcaseBusiness, title: "Role", value: "Adminstrator" },
+  { id: 3, icon: VenusAndMars, title: "Gender", value: "Male" },
+  { id: 4, icon: Mail, title: "Email Address", value: "a@a.com" },
   {
-    id: 4,
+    id: 5,
     icon: ShieldCheck,
     title: "Password",
-    value: "admin123",
+    value: "123",
     isPassword: true,
   },
 ];
-
-// ─── Setting Modal ────────────────────────────────────────────────────────────
-
-const SettingModal = ({
-  label,
-  value,
-  isPassword = false,
-  onClose,
-  onSave,
-}: {
-  label: string;
-  value: string;
-  isPassword?: boolean;
-  onClose: () => void;
-  // ✅ FIX 1: onSave was declared in props but the inner function shadowed it with
-  //           a local `function onSave(val)` that called itself → infinite loop
-  onSave: (val: string) => void;
-}) => {
-  const [inputVal, setInputVal] = useState(value);
-  const [showPw, setShowPw] = useState(false);
-  const [error, setError] = useState("");
-
-  // ✅ FIX 2: was React.SubmitEvent (doesn't exist) → React.FormEvent
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!inputVal.trim()) {
-      setError(`${label} cannot be empty`);
-      return;
-    }
-    onSave(inputVal.trim());
-    onClose();
-  }
-
-  return (
-    <div
-      className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-      style={{ background: "rgba(0,0,0,0.45)", zIndex: 10000 }}
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-4 shadow-lg overflow-hidden"
-        style={{ width: "100%", maxWidth: 400 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
-          <h6 className="fw-semibold mb-0" style={{ fontSize: 15 }}>
-            Edit {label}
-          </h6>
-          <button
-            onClick={onClose}
-            className="btn btn-sm btn-light rounded-circle p-1 lh-1"
-          >
-            <X size={14} />
-          </button>
-        </div>
-
-        {/* Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="px-4 py-4 d-flex flex-column gap-3"
-        >
-          <div>
-            <label className="form-label small fw-medium text-secondary mb-1">
-              {label}
-            </label>
-            <div className="input-group input-group-sm">
-              <input
-                type={isPassword && !showPw ? "password" : "text"}
-                className={`form-control ${error ? "is-invalid" : ""}`}
-                value={inputVal}
-                onChange={(e) => {
-                  setInputVal(e.target.value);
-                  setError("");
-                }}
-                autoFocus
-              />
-              {/* ✅ FIX 3: password field had no show/hide toggle */}
-              {isPassword && (
-                <button
-                  type="button"
-                  className="input-group-text bg-light border-start-0 px-2"
-                  onClick={() => setShowPw((v) => !v)}
-                >
-                  {showPw ? (
-                    <EyeOff size={13} className="text-secondary" />
-                  ) : (
-                    <Eye size={13} className="text-secondary" />
-                  )}
-                </button>
-              )}
-              {error && <div className="invalid-feedback">{error}</div>}
-            </div>
-          </div>
-
-          <div className="d-flex justify-content-end gap-2 pt-1 border-top mt-1">
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn btn-sm btn-light px-4"
-            >
-              Cancel
-            </button>
-            <button type="submit" className="btn btn-sm btn-primary px-4">
-              Save
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-};
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -181,12 +69,16 @@ const PersonalInfoPage = () => {
     setTimeout(() => setSaved(false), 2000);
   }
 
-  // ✅ FIX 4: password display — show masked dots instead of raw value
   function displayValue(item: PdProp) {
     if (item.isPassword) return "••••••••";
     return item.value;
   }
-
+  function removeImg() {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl); // 👈 important
+    }
+    setPreviewUrl("");
+  }
   return (
     <>
       {modal && selectedCard && (
@@ -234,8 +126,7 @@ const PersonalInfoPage = () => {
             {/* Profile picture row */}
             <div
               className="d-flex align-items-center justify-content-between p-4 border-bottom"
-              style={{ cursor: "pointer", transition: "background .2s" }}
-              onClick={() => fileRef.current?.click()}
+              style={{ transition: "background .2s" }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.backgroundColor = "#f9fafb")
               }
@@ -260,38 +151,50 @@ const PersonalInfoPage = () => {
                   <small className="text-muted">Click to change photo</small>
                 </div>
               </div>
-
-              {/* Avatar */}
-              <div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  border: "2px solid #e5e7eb",
-                  backgroundColor: "#f3f4f6",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {previewUrl ? (
-                  <img
-                    src={previewUrl}
-                    alt="Profile"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                ) : (
-                  <span
-                    className="fw-bold text-secondary"
-                    style={{ fontSize: 16 }}
+              <div className="d-flex align-items-center gap-2">
+                <div
+                  onClick={() => fileRef.current?.click()}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    border: "2px solid #e5e7eb",
+                    backgroundColor: "#f3f4f6",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  {previewUrl ? (
+                    <img
+                      src={previewUrl}
+                      alt="Profile"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    <span
+                      className="fw-bold text-secondary"
+                      style={{ fontSize: 16 }}
+                    >
+                      {initials}
+                    </span>
+                  )}
+                </div>
+                {previewUrl !== "" && (
+                  <button
+                    onClick={removeImg}
+                    className="btn  btn-light btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm p-0"
+                    style={{ width: "32px", height: "32px" }}
+                    title="Remove Image"
                   >
-                    {initials}
-                  </span>
+                    <Trash size={16} className="text-danger" />
+                  </button>
                 )}
               </div>
               <input
@@ -303,7 +206,6 @@ const PersonalInfoPage = () => {
               />
             </div>
 
-            {/* Info rows */}
             {data.map((card) => (
               <SettingCard
                 key={card.id}
@@ -319,7 +221,7 @@ const PersonalInfoPage = () => {
           </div>
 
           <p className="text-center text-muted mt-3" style={{ fontSize: 12 }}>
-            Click any field above to edit it
+            Click any field above to edit .
           </p>
         </div>
       </div>

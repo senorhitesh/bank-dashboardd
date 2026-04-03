@@ -245,3 +245,8 @@ background-color: #f7f7f7;
 .setting-card:hover {
   background-color: #fafafa; /* subtle grey */
 }
+
+
+.c{
+	display: none;
+}
