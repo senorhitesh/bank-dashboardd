@@ -198,10 +198,13 @@ const PersonalInfoPage = () => {
           {/* Danger zone */}
           <div className="  d-flex justify-content-center mt-2 border-opacity-25 rounded-4 p-1">
             <button
-              onClick={() => removeUser()}
-              className=" d-flex justify-content-center  align-items-center gap-2 btn btn-sm btn-outline-danger px-4"
+              onClick={() => {
+                removeUser();
+                router.replace("/login");
+              }}
+              className="logOut"
             >
-              Sign out <LogOut />
+              <LogOut size={44} />
             </button>
           </div>
         </div>

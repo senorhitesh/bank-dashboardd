@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowLeft, ChevronDown, Check, Globe, PenLine } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { ArrowLeft, Check, Globe, PenLine } from "lucide-react";
+import { useState, useRef } from "react";
 import TextEditor from "../../Components/TextEditor";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -15,6 +15,8 @@ interface DataProp {
 interface SubPageProp {
   id: number;
   name: string;
+  status: "Published" | "Draft";
+  content: string;
 }
 
 interface ActivePageProps {
@@ -25,7 +27,7 @@ interface ActivePageProps {
     newName: string,
     newParent: string,
     content: string,
-    status: "Published" | "Draft",
+    status: "Published" | "Draft", //
   ) => void;
   initial?: SubPageProp;
   initialStatus?: "Published" | "Draft";
@@ -43,12 +45,11 @@ const ActivePage = ({
   initialStatus = "Draft",
   parentPage,
   parentPageId,
-  pageData,
 }: ActivePageProps) => {
   const [title, setTitle] = useState(initial?.name ?? "");
   const [selectedParent, setSelectedParent] = useState(parentPage);
   const [selectedParentId, setSelectedParentId] = useState(parentPageId);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(initial?.content);
   const [status, setStatus] = useState<"Published" | "Draft">(initialStatus);
   const [savedAs, setSavedAs] = useState<"Published" | "Draft" | null>(null);
   const dropRef = useRef<HTMLDivElement>(null);
@@ -61,7 +62,7 @@ const ActivePage = ({
       initial.id,
       title,
       selectedParent,
-      content,
+      content || "",
       saveAs,
     );
     setSavedAs(saveAs);
@@ -69,7 +70,6 @@ const ActivePage = ({
   }
 
   const isPublished = status === "Published";
-
   return (
     <div className="d-flex flex-column" style={{ gap: 20 }}>
       {/* ── Top bar ── */}
@@ -83,9 +83,7 @@ const ActivePage = ({
           <ArrowLeft size={15} /> Back
         </button>
 
-        {/* Right: current status pill + two save buttons */}
         <div className="d-flex align-items-center gap-2">
-          {/* Current status indicator */}
           <span
             className="d-flex align-items-center gap-1 fw-medium"
             style={{
@@ -216,7 +214,11 @@ const ActivePage = ({
         >
           Web Content
         </p>
-        <TextEditor />
+        <TextEditor
+          onChange={(newData: string) => setContent(newData)}
+          key={initial?.id || "new-text"}
+          data={content || ""}
+        />
       </div>
     </div>
   );

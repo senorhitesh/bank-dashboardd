@@ -13,6 +13,8 @@ interface DataProp {
 interface SubPageProp {
   id: number;
   name: string;
+  status: "Published" | "Draft";
+  content?: string;
 }
 
 const Modal = ({
@@ -28,7 +30,6 @@ const Modal = ({
   const [option, setOption] = useState(pageData[0]?.parentPage ?? "");
   const [error, setError] = useState("");
 
-  // ✅ FIX 1: was React.SubmitEvent (doesn't exist) → React.FormEvent
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!text.trim()) {
@@ -45,7 +46,6 @@ const Modal = ({
       style={{ background: "rgba(0,0,0,0.45)", zIndex: 20000 }}
       onClick={onClose}
     >
-      {/* ✅ FIX 2: was plain <div> with no rounded corners or shadow */}
       <div
         className="bg-white rounded-4 shadow-lg overflow-hidden"
         style={{ width: "100%", maxWidth: 420 }}
@@ -54,7 +54,6 @@ const Modal = ({
         {/* Header */}
         <div className="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
           <h6 className="fw-semibold mb-0">Add new sub-page</h6>
-          {/* ✅ FIX 3: no close button existed */}
           <button
             onClick={onClose}
             className="btn btn-sm btn-light rounded-circle p-1 lh-1"
@@ -112,7 +111,6 @@ const Modal = ({
             >
               Cancel
             </button>
-            {/* ✅ FIX 4: was "Sumbit" typo */}
             <button type="submit" className="btn btn-sm btn-primary px-4">
               Add page
             </button>

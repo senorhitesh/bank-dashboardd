@@ -1,5 +1,4 @@
 "use client";
-
 import {
   ChevronDown,
   Plus,
@@ -9,10 +8,13 @@ import {
   FileText,
   Globe,
   PenLine,
+  ArrowRight,
 } from "lucide-react";
 import { useState } from "react";
 import ActivePage from "@/app/Components/CustomPage/ActivePage";
 import Modal from "@/app/Components/CustomPage/Modal";
+import CustomizeBtn from "@/app/Components/CustomPage/CustomizeBtn";
+import CustomisedModal from "@/app/Components/CustomPage/CustomisedModal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -26,7 +28,8 @@ interface DataProp {
 interface SubPageProp {
   id: number;
   name: string;
-  status: "Published" | "Draft"; // ← now tracked per sub-page
+  status: "Published" | "Draft";
+  content: string;
 }
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -37,11 +40,11 @@ const DATA: DataProp[] = [
     parentPage: "About",
     state: "Published",
     subPage: [
-      { id: 1, name: "About", status: "Published" },
-      { id: 2, name: "Board Of Director", status: "Published" },
-      { id: 3, name: "Gallery", status: "Draft" },
-      { id: 4, name: "Download", status: "Published" },
-      { id: 5, name: "Branches", status: "Published" },
+      { id: 1, name: "About", status: "Published", content: "" },
+      { id: 2, name: "Board Of Director", status: "Published", content: "" },
+      { id: 3, name: "Gallery", status: "Draft", content: "" },
+      { id: 4, name: "Download", status: "Published", content: "" },
+      { id: 5, name: "Branches", status: "Published", content: "" },
     ],
   },
   {
@@ -49,10 +52,10 @@ const DATA: DataProp[] = [
     parentPage: "Deposit",
     state: "Published",
     subPage: [
-      { id: 1, name: "Saving Account", status: "Published" },
-      { id: 2, name: "Current Account", status: "Published" },
-      { id: 3, name: "Recurring Deposit", status: "Draft" },
-      { id: 4, name: "Fixed Deposits", status: "Published" },
+      { id: 1, name: "Saving Account", status: "Published", content: "" },
+      { id: 2, name: "Current Account", status: "Published", content: "" },
+      { id: 3, name: "Recurring Deposit", status: "Draft", content: "" },
+      { id: 4, name: "Fixed Deposits", status: "Published", content: "" },
     ],
   },
   {
@@ -60,13 +63,13 @@ const DATA: DataProp[] = [
     parentPage: "Loans",
     state: "Published",
     subPage: [
-      { id: 1, name: "Agriculture Loans", status: "Published" },
-      { id: 2, name: "Individual Loans", status: "Published" },
-      { id: 3, name: "Loan Against Salary", status: "Draft" },
-      { id: 4, name: "Gold Loan Schemes", status: "Published" },
-      { id: 5, name: "Housing Loans", status: "Published" },
-      { id: 6, name: "Education Loans", status: "Published" },
-      { id: 7, name: "Vehicle Loans", status: "Draft" },
+      { id: 1, name: "Agriculture Loans", status: "Published", content: "" },
+      { id: 2, name: "Individual Loans", status: "Published", content: "" },
+      { id: 3, name: "Loan Against Salary", status: "Draft", content: "" },
+      { id: 4, name: "Gold Loan Schemes", status: "Published", content: "" },
+      { id: 5, name: "Housing Loans", status: "Published", content: "" },
+      { id: 6, name: "Education Loans", status: "Published", content: "" },
+      { id: 7, name: "Vehicle Loans", status: "Draft", content: "" },
     ],
   },
   {
@@ -74,13 +77,13 @@ const DATA: DataProp[] = [
     parentPage: "Service",
     state: "Published",
     subPage: [
-      { id: 1, name: "RTGS / NEFT", status: "Published" },
-      { id: 2, name: "Safe Deposit Locker", status: "Published" },
-      { id: 3, name: "ATM Facility", status: "Published" },
-      { id: 4, name: "MSEB Bill Centre", status: "Draft" },
-      { id: 5, name: "SMS Alert", status: "Published" },
-      { id: 6, name: "Mobile ATM Van", status: "Published" },
-      { id: 7, name: "Mpassbook Mobile App", status: "Draft" },
+      { id: 1, name: "RTGS / NEFT", status: "Published", content: "" },
+      { id: 2, name: "Safe Deposit Locker", status: "Published", content: "" },
+      { id: 3, name: "ATM Facility", status: "Published", content: "" },
+      { id: 4, name: "MSEB Bill Centre", status: "Draft", content: "" },
+      { id: 5, name: "SMS Alert", status: "Published", content: "" },
+      { id: 6, name: "Mobile ATM Van", status: "Published", content: "" },
+      { id: 7, name: "Mpassbook Mobile App", status: "Draft", content: "" },
     ],
   },
   {
@@ -88,10 +91,15 @@ const DATA: DataProp[] = [
     parentPage: "Know More",
     state: "Published",
     subPage: [
-      { id: 1, name: "Bank Holiday", status: "Published" },
-      { id: 2, name: "Deposit Interest Rate", status: "Published" },
-      { id: 3, name: "Loan Interest Rate", status: "Published" },
-      { id: 4, name: "Service Charges", status: "Draft" },
+      { id: 1, name: "Bank Holiday", status: "Published", content: "" },
+      {
+        id: 2,
+        name: "Deposit Interest Rate",
+        status: "Published",
+        content: "",
+      },
+      { id: 3, name: "Loan Interest Rate", status: "Published", content: "" },
+      { id: 4, name: "Service Charges", status: "Draft", content: "" },
     ],
   },
 ];
@@ -106,6 +114,8 @@ const CustomPagePage = () => {
   const [parentPage, setParentPage] = useState("");
   const [parentPageId, setParentPageId] = useState<number>(0);
   const [addModal, setAddModal] = useState(false);
+  const [addCustomModal, setCustomAddModal] = useState(false);
+  const [textEditorData, settextEditorData] = useState<string>("");
   const [deleteTarget, setDeleteTarget] = useState<{
     pageId: number;
     subId: number;
@@ -120,7 +130,36 @@ const CustomPagePage = () => {
               ...k,
               subPage: [
                 ...k.subPage,
-                { id: Date.now(), name: title, status: "Draft" as const },
+                {
+                  id: Date.now(),
+                  name: title,
+                  status: "Draft" as const,
+                  content: "",
+                },
+              ],
+            }
+          : k,
+      ),
+    );
+  }
+  function onCustomisedAddSubPage(
+    parent: string,
+    title: string,
+    content: string,
+  ) {
+    setPageData((prev) =>
+      prev.map((k) =>
+        k.parentPage === parent
+          ? {
+              ...k,
+              subPage: [
+                ...k.subPage,
+                {
+                  id: Date.now(),
+                  name: title,
+                  status: "Draft" as const,
+                  content: content,
+                },
               ],
             }
           : k,
@@ -128,7 +167,6 @@ const CustomPagePage = () => {
     );
   }
 
-  // ── Save from editor — updates name, parent, and status ────────────────────
   function onSavePage(
     pageId: number,
     subPageId: number,
@@ -143,12 +181,14 @@ const CustomPagePage = () => {
           ? { ...p, subPage: p.subPage.filter((s) => s.id !== subPageId) }
           : p,
       );
-      // Add to new parent with updated name + status
       return removed.map((p) =>
         p.parentPage === newParent
           ? {
               ...p,
-              subPage: [...p.subPage, { id: subPageId, name: newName, status }],
+              subPage: [
+                ...p.subPage,
+                { id: subPageId, name: newName, status, content: _content },
+              ],
             }
           : p,
       );
@@ -171,7 +211,6 @@ const CustomPagePage = () => {
     );
     setDeleteTarget(null);
   }
-
   // ── Editor view ─────────────────────────────────────────────────────────────
   if (activePage) {
     return (
@@ -205,8 +244,14 @@ const CustomPagePage = () => {
           pageData={pageData}
         />
       )}
+      {addCustomModal && (
+        <CustomisedModal
+          onClose={() => setCustomAddModal(false)}
+          onSave={onCustomisedAddSubPage}
+          pageData={pageData}
+        />
+      )}
 
-      {/* Header */}
       <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div>
           <h2 className="fw-semibold mb-1" style={{ fontSize: 20 }}>
@@ -223,11 +268,16 @@ const CustomPagePage = () => {
         </div>
         <button
           onClick={() => setAddModal(true)}
-          className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 fw-medium"
+          className="button-53"
+          role="button"
         >
-          <Plus size={14} /> Add Page
+          <span className="text">
+            <Plus /> Page
+          </span>
         </button>
       </div>
+
+      <CustomizeBtn onCLick={() => setCustomAddModal(true)} />
 
       {/* Accordion */}
       <div className="d-flex flex-column gap-2">
@@ -372,9 +422,10 @@ const CustomPagePage = () => {
                                 Delete?
                               </span>
                               <button
-                                onClick={() =>
-                                  deleteSubPage(section.id, child.id)
-                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteSubPage(section.id, child.id);
+                                }}
                                 className="btn btn-danger btn-sm p-1 lh-1"
                               >
                                 <Check size={11} />
@@ -389,22 +440,13 @@ const CustomPagePage = () => {
                           ) : (
                             <>
                               <button
-                                onClick={() => {
-                                  setActivePage(true);
-                                  setTargetSubPage(child);
-                                  setParentPage(section.parentPage);
-                                  setParentPageId(section.id);
-                                }}
-                                className="btn btn-light btn-sm p-1 lh-1"
-                                title="Edit"
-                              ></button>
-                              <button
-                                onClick={() =>
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setDeleteTarget({
                                     pageId: section.id,
                                     subId: child.id,
-                                  })
-                                }
+                                  });
+                                }}
                                 className="btn btn-light btn-sm p-1 lh-1"
                                 title="Delete"
                               >

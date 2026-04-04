@@ -1,8 +1,3 @@
-/**
- * This configuration was generated using the CKEditor 5 Builder. You can modify it anytime using this link:
- * https://ckeditor.com/ckeditor-5/builder/?redirect=portal#installation/NoJgNARAzAdADPCkCMAOEB2Zc1w1EZATgFYiM4A2IoyvVIuKAFhuedWbm5EJKiiVqlJBACmAOyRwwwZGHkz5igLqQS+OAEMiICCqA===
- */
-
 import { useState, useEffect, useRef, useMemo } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import {
@@ -105,12 +100,17 @@ const LICENSE_KEY =
 const CLOUD_SERVICES_TOKEN_URL =
   "https://rw205cqxhxvk.cke-cs.com/token/dev/ef17e8304c90ca9512b54bc04017616508868446d5246da7384ce4bc691b?limit=10";
 
-export default function App() {
+export default function App({
+  data,
+  onChange,
+}: {
+  data: string;
+  onChange: (data: string) => void;
+}) {
   const [isLayoutReady, setIsLayoutReady] = useState(false);
 
   useEffect(() => {
     setIsLayoutReady(true);
-
     return () => setIsLayoutReady(false);
   }, []);
 
@@ -123,7 +123,7 @@ export default function App() {
       editorConfig: {
         root: {
           placeholder: "Type or paste your content here!",
-          initialData: ``,
+          initialData: data,
         },
         toolbar: {
           items: [
@@ -266,10 +266,7 @@ export default function App() {
         },
         exportPdf: {
           stylesheets: [
-            /* This path should point to the content stylesheets on your assets server. */
-            /* See: https://ckeditor.com/docs/ckeditor5/latest/features/converters/export-pdf.html */
             "./export-style.css",
-            /* Export PDF needs access to stylesheets that style the content. */
             "https://cdn.ckeditor.com/ckeditor5/48.0.0/ckeditor5.css",
             "https://cdn.ckeditor.com/ckeditor5-premium-features/48.0.0/ckeditor5-premium-features.css",
           ],
@@ -289,10 +286,7 @@ export default function App() {
         },
         exportWord: {
           stylesheets: [
-            /* This path should point to the content stylesheets on your assets server. */
-            /* See: https://ckeditor.com/docs/ckeditor5/latest/features/converters/export-word.html */
             "./export-style.css",
-            /* Export Word needs access to stylesheets that style the content. */
             "https://cdn.ckeditor.com/ckeditor5/48.0.0/ckeditor5.css",
             "https://cdn.ckeditor.com/ckeditor5-premium-features/48.0.0/ckeditor5-premium-features.css",
           ],
@@ -423,40 +417,20 @@ export default function App() {
           feeds: [
             {
               marker: "@",
-              feed: [
-                /* See: https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html */
-              ],
+              feed: [],
             },
           ],
         },
         menuBar: {
           isVisible: true,
         },
-        mergeFields: {
-          /* Read more: https://ckeditor.com/docs/ckeditor5/latest/features/merge-fields.html#configuration */
-        },
+        mergeFields: {},
         style: {
           definitions: [
-            {
-              name: "Article category",
-              element: "h3",
-              classes: ["category"],
-            },
-            {
-              name: "Title",
-              element: "h2",
-              classes: ["document-title"],
-            },
-            {
-              name: "Subtitle",
-              element: "h3",
-              classes: ["document-subtitle"],
-            },
-            {
-              name: "Info box",
-              element: "p",
-              classes: ["info-box"],
-            },
+            { name: "Article category", element: "h3", classes: ["category"] },
+            { name: "Title", element: "h2", classes: ["document-title"] },
+            { name: "Subtitle", element: "h3", classes: ["document-subtitle"] },
+            { name: "Info box", element: "p", classes: ["info-box"] },
             {
               name: "CTA Link Primary",
               element: "a",
@@ -467,16 +441,8 @@ export default function App() {
               element: "a",
               classes: ["button", "button--black"],
             },
-            {
-              name: "Marker",
-              element: "span",
-              classes: ["marker"],
-            },
-            {
-              name: "Spoiler",
-              element: "span",
-              classes: ["spoiler"],
-            },
+            { name: "Marker", element: "span", classes: ["marker"] },
+            { name: "Spoiler", element: "span", classes: ["spoiler"] },
           ],
         },
         table: {
@@ -514,7 +480,15 @@ export default function App() {
         <div className="editor-container__editor">
           <div>
             {editorConfig && (
-              <CKEditor editor={ClassicEditor} config={editorConfig} />
+              <CKEditor
+                editor={ClassicEditor}
+                data={data}
+                onChange={(event, editor) => {
+                  const content = editor.getData();
+                  onChange(content);
+                }}
+                config={editorConfig}
+              />
             )}
           </div>
         </div>
@@ -523,35 +497,23 @@ export default function App() {
   );
 }
 
-/**
- * This function exists to remind you to update the config needed for premium features.
- * The function can be safely removed. Make sure to also remove call to this function when doing so.
- */
 function configUpdateAlert(config) {
   if (configUpdateAlert.configUpdateAlertShown) {
     return;
   }
 
   const isModifiedByUser = (currentValue, forbiddenValue) => {
-    if (currentValue === forbiddenValue) {
-      return false;
-    }
-
-    if (currentValue === undefined) {
-      return false;
-    }
-
+    if (currentValue === forbiddenValue) return false;
+    if (currentValue === undefined) return false;
     return true;
   };
 
   const valuesToUpdate = [];
-
   configUpdateAlert.configUpdateAlertShown = true;
 
   if (!isModifiedByUser(config.licenseKey, "<YOUR_LICENSE_KEY>")) {
     valuesToUpdate.push("LICENSE_KEY");
   }
-
   if (
     !isModifiedByUser(
       config.cloudServices?.tokenUrl,
