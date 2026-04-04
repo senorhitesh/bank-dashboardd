@@ -5,6 +5,7 @@ export interface AuthUser {
   email: string;
   name: string;
   role: string;
+  password: string;
 }
 
 export function validateCredentials(
@@ -24,5 +25,6 @@ export function validateCredentials(
     email: found.email,
     name: found.name,
     role: found.role,
+    password: found.password,
   };
 }

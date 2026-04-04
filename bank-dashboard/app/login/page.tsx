@@ -45,12 +45,10 @@ const Page = () => {
   const hasErrors = Object.keys(errors).length > 0;
 
   return (
-    // vh-100 replaces h-screen; d-flex justify-content-center align-items-center handles the centering
     <div
       className="vh-100 d-flex justify-content-center align-items-center"
       style={{ backgroundColor: "#FEF9FF" }}
     >
-      {/* card component provides the white background, border, and shadow */}
       <div
         className="card shadow-sm border-light p-4"
         style={{ width: "100%", maxWidth: "400px", borderRadius: "12px" }}
@@ -72,7 +70,6 @@ const Page = () => {
           <InputField
             label={"Email"}
             name={"email"}
-            // Ensure InputField internal uses .form-control
             type={"email"}
             placeholder={"abc@abc.com"}
             value={values.email}

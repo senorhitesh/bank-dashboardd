@@ -47,10 +47,11 @@ const SettingModal = ({
             Edit {label}
           </h6>
           <button
+            style={{ display: "flex", width: "40px", height: "40px" }}
             onClick={onClose}
-            className="btn btn-sm btn-light rounded-circle p-1 lh-1"
+            className="btn btn-sm btn-light justify-content-center align-items-center rounded-circle "
           >
-            <X size={14} />
+            <X />
           </button>
         </div>
 

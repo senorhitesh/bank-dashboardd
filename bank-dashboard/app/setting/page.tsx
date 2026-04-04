@@ -4,19 +4,21 @@ import {
   ArrowLeft,
   Camera,
   IdCard,
-  VenusAndMars,
   ShieldCheck,
   Mail,
   LucideIcon,
-  Check,
   BriefcaseBusiness,
-  Upload,
-  Trash,
+  Users,
+  LogOut,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import SettingCard from "../Components/Setting/SettingCard";
 import SettingModal from "../Components/Setting/SettingModal";
+import { getUser } from "../lib/session";
+import type { AuthUser } from "../lib/auth";
+import { removeUser } from "../lib/session";
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface PdProp {
@@ -26,35 +28,46 @@ interface PdProp {
   value: string;
   isPassword?: boolean;
 }
-// ─── Data ─────────────────────────────────────────────────────────────────────
-
-const PROFILE_DATA: PdProp[] = [
-  { id: 1, icon: IdCard, title: "Full Name", value: "Admin" },
-  { id: 2, icon: BriefcaseBusiness, title: "Role", value: "Adminstrator" },
-  { id: 3, icon: VenusAndMars, title: "Gender", value: "Male" },
-  { id: 4, icon: Mail, title: "Email Address", value: "a@a.com" },
-  {
-    id: 5,
-    icon: ShieldCheck,
-    title: "Password",
-    value: "123",
-    isPassword: true,
-  },
-];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 const PersonalInfoPage = () => {
-  const [data, setData] = useState<PdProp[]>(PROFILE_DATA);
+  const router = useRouter();
+
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [data, setData] = useState<PdProp[]>([]);
   const [previewUrl, setPreviewUrl] = useState("");
   const [selectedCard, setSelectedCard] = useState<PdProp | null>(null);
   const [modal, setModal] = useState(false);
-  const [saved, setSaved] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
 
-  const currentUser = data.find((d) => d.id === 1)?.value ?? "AD";
-  const initials = currentUser.slice(0, 2).toUpperCase();
+  useEffect(() => {
+    const sessionUser = getUser();
+    if (!sessionUser) {
+      router.replace("/login");
+      return;
+    }
+    setUser(sessionUser);
+
+    setData([
+      { id: 1, icon: IdCard, title: "Full Name", value: sessionUser.name },
+      {
+        id: 2,
+        icon: BriefcaseBusiness,
+        title: "Role",
+        value: sessionUser.role,
+      },
+      { id: 3, icon: Users, title: "Gender", value: "Male" },
+      { id: 4, icon: Mail, title: "Email Address", value: sessionUser.email },
+      {
+        id: 5,
+        icon: ShieldCheck,
+        title: "Password",
+        value: sessionUser.password,
+        isPassword: true,
+      },
+    ]);
+  }, [router]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -65,27 +78,17 @@ const PersonalInfoPage = () => {
     setData((prev) =>
       prev.map((v) => (v.id === selectedCard?.id ? { ...v, value: val } : v)),
     );
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
   }
 
-  function displayValue(item: PdProp) {
-    if (item.isPassword) return "••••••••";
-    return item.value;
-  }
-  function removeImg() {
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl); // 👈 important
-    }
-    setPreviewUrl("");
-  }
+  const initials = user?.name?.slice(0, 2).toUpperCase() ?? "??";
+
+  if (!user) return null; // redirect in progress
+
   return (
     <>
       {modal && selectedCard && (
         <SettingModal
-          label={selectedCard.title}
-          value={selectedCard.value}
-          isPassword={selectedCard.isPassword}
+          field={selectedCard}
           onClose={() => setModal(false)}
           onSave={onSave}
         />
@@ -93,7 +96,6 @@ const PersonalInfoPage = () => {
 
       <div className="container-fluid min-vh-100 bg-white p-3 p-md-4">
         <div className="mx-auto" style={{ maxWidth: 640 }}>
-          {/* Back button */}
           <button
             onClick={() => router.replace("/dashboard")}
             className="btn btn-link text-decoration-none text-dark p-0 d-flex align-items-center gap-2 mb-4"
@@ -102,31 +104,22 @@ const PersonalInfoPage = () => {
             <span className="fw-medium">Back to Dashboard</span>
           </button>
 
-          {/* Page title */}
           <div className="text-center mb-4">
             <h2 className="fw-bold text-dark mb-1">Personal Info</h2>
             <p className="text-muted mb-0" style={{ fontSize: 14 }}>
               Manage your account details and security
             </p>
-            {saved && (
-              <span
-                className="d-inline-flex align-items-center gap-1 mt-2 text-success fw-medium"
-                style={{ fontSize: 13 }}
-              >
-                <Check size={14} /> Changes saved
-              </span>
-            )}
           </div>
 
-          {/* Card */}
           <div
-            className="card shadow-sm border-light overflow-hidden"
-            style={{ borderRadius: 16 }}
+            className="border overflow-hidden"
+            style={{ borderRadius: 16, boxShadow: "0 2px 8px rgba(0,0,0,.07)" }}
           >
             {/* Profile picture row */}
             <div
               className="d-flex align-items-center justify-content-between p-4 border-bottom"
-              style={{ transition: "background .2s" }}
+              style={{ cursor: "pointer", transition: "background .2s" }}
+              onClick={() => fileRef.current?.click()}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.backgroundColor = "#f9fafb")
               }
@@ -137,92 +130,80 @@ const PersonalInfoPage = () => {
               <div className="d-flex gap-3 align-items-center">
                 <div
                   className="bg-light d-flex align-items-center justify-content-center rounded-circle"
-                  style={{ width: 44, height: 44 }}
+                  style={{ width: 45, height: 45 }}
                 >
                   <Camera size={20} color="#4b5563" />
                 </div>
                 <div>
-                  <h6
-                    className="m-0 fw-semibold text-dark"
-                    style={{ fontSize: 14 }}
-                  >
+                  <h6 className="mb-0 fw-semibold" style={{ fontSize: 14 }}>
                     Profile Picture
                   </h6>
                   <small className="text-muted">Click to change photo</small>
                 </div>
               </div>
-              <div className="d-flex align-items-center gap-2">
-                <div
-                  onClick={() => fileRef.current?.click()}
-                  style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    border: "2px solid #e5e7eb",
-                    backgroundColor: "#f3f4f6",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                  }}
-                >
-                  {previewUrl ? (
-                    <img
-                      src={previewUrl}
-                      alt="Profile"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ) : (
-                    <span
-                      className="fw-bold text-secondary"
-                      style={{ fontSize: 16 }}
-                    >
-                      {initials}
-                    </span>
-                  )}
-                </div>
-                {previewUrl !== "" && (
-                  <button
-                    onClick={removeImg}
-                    className="btn  btn-light btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm p-0"
-                    style={{ width: "32px", height: "32px" }}
-                    title="Remove Image"
+              <div
+                className="rounded-circle overflow-hidden d-flex align-items-center justify-content-center flex-shrink-0"
+                style={{
+                  width: 56,
+                  height: 56,
+                  background: "#e0e7ff",
+                  border: "2px solid #fff",
+                  boxShadow: "0 2px 6px rgba(0,0,0,.1)",
+                }}
+              >
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt="Profile"
+                    className="w-100 h-100"
+                    style={{ objectFit: "cover" }}
+                  />
+                ) : (
+                  <span
+                    className="fw-bold text-primary"
+                    style={{ fontSize: 16 }}
                   >
-                    <Trash size={16} className="text-danger" />
-                  </button>
+                    {initials}
+                  </span>
                 )}
               </div>
               <input
                 ref={fileRef}
                 type="file"
-                accept="image/*"
                 className="d-none"
+                accept="image/*"
                 onChange={handleFileChange}
               />
             </div>
 
+            {/* Fields */}
             {data.map((card) => (
               <SettingCard
                 key={card.id}
+                onClick={() => {
+                  setModal(true);
+                  setSelectedCard(card);
+                }}
                 title={card.title}
                 Icon={card.icon}
-                description={displayValue(card)}
-                onClick={() => {
-                  setSelectedCard(card);
-                  setModal(true);
-                }}
+                description={
+                  card.isPassword
+                    ? "•".repeat(Math.min((card.value ?? "").length, 10))
+                    : (card.value ?? "")
+                }
               />
             ))}
           </div>
 
-          <p className="text-center text-muted mt-3" style={{ fontSize: 12 }}>
-            Click any field above to edit .
-          </p>
+          {/* Danger zone */}
+          <div className="  d-flex justify-content-center mt-2 border-opacity-25 rounded-4 p-1">
+            <button
+              onClick={() => removeUser()}
+              className=" d-flex justify-content-center  align-items-center gap-2 btn btn-sm btn-outline-danger px-4"
+            >
+              Sign out <LogOut />
+            </button>
+          </div>
         </div>
       </div>
     </>
