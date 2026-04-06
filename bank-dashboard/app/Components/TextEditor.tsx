@@ -1,466 +1,425 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import {
-  ClassicEditor,
-  Autosave,
-  Essentials,
-  Paragraph,
-  Autoformat,
-  TextTransformation,
-  LinkImage,
-  Link,
-  ImageBlock,
-  ImageToolbar,
-  BlockQuote,
-  Bold,
-  Bookmark,
-  CKBox,
-  CloudServices,
-  ImageUpload,
-  ImageInsert,
-  ImageInsertViaUrl,
-  AutoImage,
-  PictureEditing,
-  CKBoxImageEdit,
-  TableColumnResize,
-  Table,
-  TableToolbar,
-  Emoji,
-  Mention,
-  PasteFromOffice,
-  FindAndReplace,
-  FontBackgroundColor,
-  FontColor,
-  FontFamily,
-  FontSize,
-  Fullscreen,
-  Heading,
-  Highlight,
-  HorizontalLine,
-  ImageTextAlternative,
-  ImageCaption,
-  ImageResize,
-  ImageStyle,
-  Indent,
-  IndentBlock,
-  Code,
-  ImageInline,
-  Italic,
-  AutoLink,
-  ListProperties,
-  List,
-  ImageUtils,
-  ImageEditing,
-  PageBreak,
-  RemoveFormat,
-  SpecialCharactersArrows,
-  SpecialCharacters,
-  SpecialCharactersCurrency,
-  SpecialCharactersEssentials,
-  SpecialCharactersLatin,
-  SpecialCharactersMathematical,
-  SpecialCharactersText,
-  Strikethrough,
-  Style,
-  GeneralHtmlSupport,
-  Subscript,
-  Superscript,
-  TableCaption,
-  TableCellProperties,
-  TableProperties,
-  Alignment,
-  TodoList,
-  Underline,
-  BalloonToolbar,
-  type EditorConfig,
-} from "ckeditor5";
-import {
-  CaseChange,
-  PasteFromOfficeEnhanced,
-  ExportPdf,
-  ExportWord,
-  Footnotes,
-  FormatPainter,
-  ImportWord,
-  LineHeight,
-  MergeFields,
-  MultiLevelList,
-  SlashCommand,
-  TableOfContents,
-  Template,
-} from "ckeditor5-premium-features";
+import { useState, useMemo } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { Globe, Link as LinkIcon, Share2 } from "lucide-react";
+import CustomInput from "@/app/Components/CustomInput";
+import TextEditor from "@/app/Components/TextEditor";
+import Header from "@/app/Components/WebInfo/Header";
 
-import "ckeditor5/ckeditor5.css";
-import "ckeditor5-premium-features/ckeditor5-premium-features.css";
+const initialBankData = {
+  ContactNo: "07172-252180",
+  ContactNo2: "07172-252180",
+  Email: "info@cdccbank.co.in",
+  Emai2: "/test01",
+  FaxNo: "07172-255224",
+  Address:
+    "Head Office Civil Lines, Nagpur Road Chandrapur, 442401,Maharashtra , India",
+  ShareCapital: "1230",
+  Branches: "92",
+  Deposits: "1785.51",
+  Advance: "1119.71",
+  WebsiteTitle: "The Chandrapur District Central Co-operative Bank",
+  OpenCloseTime: "10:00 AM to 04:00 PM 2nd & 4th Saturday Closed",
+  LocationCity: "Chandrapur",
+  RegistrationNo: "RPCD.NAG.DCCB/L/09",
+  RBILicenseNo: "CDCC/test01",
+  BankIFSC: "CDCC/test01",
+  PAN: "CDCC/test01",
+  TAN: "CDCC/test01",
+  NetBankingLink: "",
+  AndroidApplicationLink:
+    "https://play.google.com/store/apps/details?id=com.trustbank.cdccbank",
+  IOSApplicationLink: "",
+  GST: "",
+  FacebookLink: "",
+  InstagramLink: "",
+  Twitter: "",
+  Youtube: "",
+  WhatsAppBanking: "",
+  About: "",
+  MissionVison: "",
+  History: "",
+};
+type TabType = "About" | "Mission & Vision" | "History";
+export default function WebInfoSettings() {
+  const [formData, setFormData] = useState(initialBankData);
+  const [savedData, setSavedData] = useState(initialBankData);
 
-const LICENSE_KEY =
-  "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzYyMTExOTksImp0aSI6IjZjNDE3YTM0LWIyY2YtNDA4OC1hN2ZhLWE0MmFmZTAzMzM0ZSIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6IjU0NGNlYmY4In0.a-QYMgkRPJ_tZgoLx9NKowzM6UPjbX5vPkq6USIyPhbgS9yxAwqTsNdKyyLatb9xxPCQ6I9dmz0dW90e37D1Tg";
+  const [TextEditorDataAbout, setTextEditorDataAbout] = useState(
+    formData.About,
+  );
+  const [TextEditorDataMV, setTextEditorDataMV] = useState(
+    formData.MissionVison,
+  );
+  const [TextEditorDataHIS, setTextEditorDataHIS] = useState(formData.History);
 
-const CLOUD_SERVICES_TOKEN_URL =
-  "https://rw205cqxhxvk.cke-cs.com/token/dev/ef17e8304c90ca9512b54bc04017616508868446d5246da7384ce4bc691b?limit=10";
+  const isChanged = useMemo(() => {
+    return JSON.stringify(formData) !== JSON.stringify(savedData);
+  }, [formData, savedData]);
 
-export default function App({
-  data,
-  onChange,
-}: {
-  data: string;
-  onChange: (data: string) => void;
-}) {
-  const [isLayoutReady, setIsLayoutReady] = useState(false);
+  const handleUpdate = (key: keyof typeof initialBankData, value: string) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
 
-  useEffect(() => {
-    setIsLayoutReady(true);
-    return () => setIsLayoutReady(false);
-  }, []);
+  const saveChanges = () => {
+    setSavedData(formData);
+    toast.success("All changes saved !");
+  };
+  const tabs: TabType[] = ["About", "Mission & Vision", "History"];
 
-  const editorConfig: EditorConfig | null = useMemo(() => {
-    if (!isLayoutReady) {
-      return null;
-    }
-
-    return {
-      root: {
-        placeholder: "Type or paste your content here!",
-        initialData: data,
-      },
-      toolbar: {
-        items: [
-          "undo",
-          "redo",
-          "|",
-          "insertMergeField",
-          "previewMergeFields",
-          "|",
-          "formatPainter",
-          "|",
-          "heading",
-          "style",
-          "|",
-          "fontSize",
-          "fontFamily",
-          "fontColor",
-          "fontBackgroundColor",
-          "|",
-          "bold",
-          "italic",
-          "underline",
-          "|",
-          "link",
-          "insertImage",
-          "insertTable",
-          "highlight",
-          "blockQuote",
-          "|",
-          "alignment",
-          "lineHeight",
-          "|",
-          "bulletedList",
-          "numberedList",
-          "multiLevelList",
-          "todoList",
-          "outdent",
-          "indent",
-        ],
-        shouldNotGroupWhenFull: false,
-      },
-      plugins: [
-        Alignment,
-        Autoformat,
-        AutoImage,
-        AutoLink,
-        Autosave,
-        BalloonToolbar,
-        BlockQuote,
-        Bold,
-        Bookmark,
-        CaseChange,
-        CKBox,
-        CKBoxImageEdit,
-        CloudServices,
-        Code,
-        Emoji,
-        Essentials,
-        ExportPdf,
-        ExportWord,
-        FindAndReplace,
-        FontBackgroundColor,
-        FontColor,
-        FontFamily,
-        FontSize,
-        Footnotes,
-        FormatPainter,
-        Fullscreen,
-        GeneralHtmlSupport,
-        Heading,
-        Highlight,
-        HorizontalLine,
-        ImageBlock,
-        ImageCaption,
-        ImageEditing,
-        ImageInline,
-        ImageInsert,
-        ImageInsertViaUrl,
-        ImageResize,
-        ImageStyle,
-        ImageTextAlternative,
-        ImageToolbar,
-        ImageUpload,
-        ImageUtils,
-        ImportWord,
-        Indent,
-        IndentBlock,
-        Italic,
-        LineHeight,
-        Link,
-        LinkImage,
-        List,
-        ListProperties,
-        Mention,
-        MergeFields,
-        MultiLevelList,
-        PageBreak,
-        Paragraph,
-        PasteFromOffice,
-        PasteFromOfficeEnhanced,
-        PictureEditing,
-        RemoveFormat,
-        SlashCommand,
-        SpecialCharacters,
-        SpecialCharactersArrows,
-        SpecialCharactersCurrency,
-        SpecialCharactersEssentials,
-        SpecialCharactersLatin,
-        SpecialCharactersMathematical,
-        SpecialCharactersText,
-        Strikethrough,
-        Style,
-        Subscript,
-        Superscript,
-        Table,
-        TableCaption,
-        TableCellProperties,
-        TableColumnResize,
-        TableOfContents,
-        TableProperties,
-        TableToolbar,
-        Template,
-        TextTransformation,
-        TodoList,
-        Underline,
-      ],
-      licenseKey: LICENSE_KEY,
-      balloonToolbar: [
-        "bold",
-        "italic",
-        "|",
-        "link",
-        "insertImage",
-        "|",
-        "bulletedList",
-        "numberedList",
-      ],
-      cloudServices: {
-        tokenUrl: CLOUD_SERVICES_TOKEN_URL,
-      },
-      exportPdf: {
-        stylesheets: [
-          "./export-style.css",
-          "https://cdn.ckeditor.com/ckeditor5/48.0.0/ckeditor5.css",
-          "https://cdn.ckeditor.com/ckeditor5-premium-features/48.0.0/ckeditor5-premium-features.css",
-        ],
-        fileName: "export-pdf-demo.pdf",
-        converterOptions: {
-          document: {
-            size: "Tabloid",
-            orientation: "portrait",
-            margins: {
-              top: "20mm",
-              bottom: "20mm",
-              right: "24mm",
-              left: "24mm",
-            },
-          },
-        },
-      },
-      exportWord: {
-        stylesheets: [
-          "./export-style.css",
-          "https://cdn.ckeditor.com/ckeditor5/48.0.0/ckeditor5.css",
-          "https://cdn.ckeditor.com/ckeditor5-premium-features/48.0.0/ckeditor5-premium-features.css",
-        ],
-        fileName: "export-word-demo.docx",
-        converterOptions: {
-          document: {
-            orientation: "portrait",
-            size: "Tabloid",
-            margins: {
-              top: "20mm",
-              bottom: "20mm",
-              right: "24mm",
-              left: "24mm",
-            },
-          },
-        },
-      },
-      fontFamily: { supportAllValues: true },
-      fontSize: {
-        options: [10, 12, 14, "default", 18, 20, 22],
-        supportAllValues: true,
-      },
-      fullscreen: {
-        onEnterCallback: (container: HTMLElement) =>
-          container.classList.add(
-            "editor-container",
-            "editor-container_classic-editor",
-            "editor-container_include-style",
-            "editor-container_include-fullscreen",
-            "main-container",
-          ),
-      },
-      heading: {
-        options: [
-          {
-            model: "paragraph",
-            title: "Paragraph",
-            class: "ck-heading_paragraph",
-          },
-          {
-            model: "heading1",
-            view: "h1",
-            title: "Heading 1",
-            class: "ck-heading_heading1",
-          },
-          {
-            model: "heading2",
-            view: "h2",
-            title: "Heading 2",
-            class: "ck-heading_heading2",
-          },
-          {
-            model: "heading3",
-            view: "h3",
-            title: "Heading 3",
-            class: "ck-heading_heading3",
-          },
-          {
-            model: "heading4",
-            view: "h4",
-            title: "Heading 4",
-            class: "ck-heading_heading4",
-          },
-          {
-            model: "heading5",
-            view: "h5",
-            title: "Heading 5",
-            class: "ck-heading_heading5",
-          },
-          {
-            model: "heading6",
-            view: "h6",
-            title: "Heading 6",
-            class: "ck-heading_heading6",
-          },
-        ],
-      },
-      htmlSupport: {
-        allow: [
-          { name: /^.*$/, styles: true, attributes: true, classes: true },
-        ],
-      },
-      image: {
-        toolbar: [
-          "toggleImageCaption",
-          "imageTextAlternative",
-          "|",
-          "imageStyle:inline",
-          "imageStyle:wrapText",
-          "imageStyle:breakText",
-          "|",
-          "resizeImage",
-          "|",
-          "ckboxImageEdit",
-        ],
-      },
-      lineHeight: { supportAllValues: true },
-      link: {
-        addTargetToExternalLinks: true,
-        defaultProtocol: "https://",
-        decorators: {
-          toggleDownloadable: {
-            mode: "manual",
-            label: "Downloadable",
-            attributes: { download: "file" },
-          },
-        },
-      },
-      list: {
-        properties: { styles: true, startIndex: true, reversed: true },
-      },
-      mention: {
-        feeds: [{ marker: "@", feed: [] }],
-      },
-      menuBar: { isVisible: true },
-      style: {
-        definitions: [
-          { name: "Article category", element: "h3", classes: ["category"] },
-          { name: "Title", element: "h2", classes: ["document-title"] },
-          { name: "Subtitle", element: "h3", classes: ["document-subtitle"] },
-          { name: "Info box", element: "p", classes: ["info-box"] },
-          {
-            name: "CTA Link Primary",
-            element: "a",
-            classes: ["button", "button--green"],
-          },
-          {
-            name: "CTA Link Secondary",
-            element: "a",
-            classes: ["button", "button--black"],
-          },
-          { name: "Marker", element: "span", classes: ["marker"] },
-          { name: "Spoiler", element: "span", classes: ["spoiler"] },
-        ],
-      },
-      table: {
-        contentToolbar: [
-          "tableColumn",
-          "tableRow",
-          "mergeTableCells",
-          "tableProperties",
-          "tableCellProperties",
-        ],
-      },
-      template: {
-        definitions: [
-          {
-            title: "Introduction",
-            description: "Simple introduction to an article",
-            icon: '<svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="45" height="45" fill="#A5E7EB"/></svg>',
-            data: "<h2>Introduction</h2><p>Content goes here...</p>",
-          },
-        ],
-      },
-    };
-  }, [isLayoutReady, data]);
-
+  const [activeTab, setActiveTab] = useState<TabType>("About");
   return (
-    <div className="main-container">
-      <div className="editor-container editor-container_classic-editor editor-container_include-style editor-container_include-fullscreen">
-        <div className="editor-container__editor">
-          {editorConfig && (
-            <CKEditor
-              editor={ClassicEditor}
-              data={data}
-              onChange={(event, editor) => {
-                const content = editor.getData();
-                onChange(content);
-              }}
-              config={editorConfig}
-            />
-          )}
+    <>
+      <div className="container-fluid p-0">
+        <Toaster />
+        <Header
+          onSave={saveChanges}
+          reset={() => setFormData(savedData)}
+          isChanged={isChanged}
+        />
+        {/* 2. FORM CONTENT AREA */}
+        <div>
+          <div className="row g-4">
+            {/* CARD 1: BANK CORE DETAILS */}
+            <div className="col-12">
+              <div className="card border-0 shadow-sm overflow-hidden rounded-4">
+                <div className="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+                  <Globe size={20} className="text-primary" />
+                  <h5 className="mb-0 fw-bold">Bank Contact Details</h5>
+                </div>
+                <div className="card-body p-4">
+                  {/* 3-column grid for full page feel */}
+                  <div className="row g-4">
+                    <div className="col-lg-4 col-md-6">
+                      <CustomInput
+                        label="Primary Phone (1)"
+                        value={formData.ContactNo}
+                        onChange={(v) => handleUpdate("ContactNo", v)}
+                        required
+                      />
+                    </div>
+                    <div className="col-lg-4 col-md-6">
+                      <CustomInput
+                        label="Secondary Phone (2)"
+                        value={formData.ContactNo2}
+                        onChange={(v) => handleUpdate("ContactNo2", v)}
+                      />
+                    </div>
+                    <div className="col-lg-4 col-md-6">
+                      <CustomInput
+                        label="Primary Email"
+                        value={formData.Email}
+                        onChange={(v) => handleUpdate("Email", v)}
+                      />
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                      <CustomInput
+                        label="Secondary Email"
+                        value={formData.FaxNo}
+                        onChange={(v) => handleUpdate("FaxNo", v)}
+                      />
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                      <CustomInput
+                        label="Fax Number"
+                        value={formData.Emai2}
+                        onChange={(v) => handleUpdate("Emai2", v)}
+                      />
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                      <CustomInput
+                        label="Address"
+                        value={formData.Address}
+                        onChange={(v) => handleUpdate("Address", v)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CARD 2: BANKING & APP LINKS */}
+            <div className="col-xl-6 col-12">
+              <div className="card border-0 shadow-sm h-100 rounded-4">
+                <div className="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+                  <LinkIcon size={20} className="text-primary" />
+                  <h5 className="mb-0 fw-bold">
+                    Financial & Operational Information
+                  </h5>
+                </div>
+                <div className="card-body p-4">
+                  <div className="row g-3">
+                    <div className="col-12">
+                      <CustomInput
+                        label="Share Capital"
+                        value={formData.ShareCapital}
+                        onChange={(v) => handleUpdate("ShareCapital", v)}
+                        placeholder="https://"
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <CustomInput
+                        label="Number of Branches"
+                        value={formData.Branches}
+                        onChange={(v) => handleUpdate("Branches", v)}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <CustomInput
+                        label="Deposits"
+                        value={formData.Deposits}
+                        onChange={(v) => handleUpdate("Deposits", v)}
+                      />
+                    </div>
+                    <div className="col-md-12">
+                      <CustomInput
+                        label="Advances"
+                        value={formData.Advance}
+                        onChange={(v) => handleUpdate("Advance", v)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-xl-6 col-12">
+              <div className="card border-0 shadow-sm h-100 rounded-4 overflow-hidden">
+                {/* Header */}
+                <div className="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+                  <LinkIcon size={20} className="text-primary" />
+                  <h5 className="mb-0 fw-bold">Bank Overview</h5>
+                </div>
+
+                {/* Tabs - Full Width */}
+                <div className="w-100 border-bottom">
+                  {/* Removed gap-4, keeping d-flex to allow flex-fill to work */}
+                  <div className="d-flex align-items-center w-100">
+                    {tabs.map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setActiveTab(t)}
+                        className={`btn py-2 btn-sm px-3 pb-2 flex-fill rounded-0 border-0 border-bottom fw-medium ${
+                          activeTab === t
+                            ? "border-primary text-primary"
+                            : "border-transparent text-secondary"
+                        }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="card-body p-4">
+                  {activeTab === "About" && (
+                    <div
+                      style={{
+                        height: "250px", // or whatever fits your layout
+                        overflowY: "auto",
+                        overflowX: "hidden",
+                      }}
+                    >
+                      <TextEditor
+                        key={1}
+                        data={TextEditorDataAbout}
+                        onChange={(newData: string) =>
+                          setTextEditorDataAbout(newData)
+                        }
+                      />
+                    </div>
+                  )}
+                  {activeTab === "Mission & Vision" && (
+                    <div
+                      style={{
+                        height: "250px",
+                        overflowY: "auto",
+                        overflowX: "hidden",
+                      }}
+                    >
+                      <TextEditor
+                        key={2}
+                        data={TextEditorDataMV}
+                        onChange={(newData: string) =>
+                          setTextEditorDataMV(newData)
+                        }
+                      />
+                    </div>
+                  )}
+                  {activeTab === "History" && (
+                    <div
+                      style={{
+                        height: "250px",
+                        overflowY: "auto",
+                        overflowX: "hidden",
+                      }}
+                    >
+                      <TextEditor
+                        key={3}
+                        data={TextEditorDataHIS}
+                        onChange={(newData: string) =>
+                          setTextEditorDataHIS(newData)
+                        }
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <div className="container-fluid p-0">
+        {/* 2. FORM CONTENT AREA */}
+        <div style={{ marginTop: 20 }}>
+          <div className="row g-4">
+            {/* CARD 1: BANK CORE DETAILS */}
+            <div className="col-12">
+              <div className="card border-0 shadow-sm overflow-hidden rounded-4">
+                <div className="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+                  <Globe size={20} className="text-primary" />
+                  <h5 className="mb-0 fw-bold">Bank Basic Details</h5>
+                </div>
+                <div className="card-body p-4">
+                  {/* 3-column grid for full page feel */}
+                  <div className="row g-4">
+                    <div className="col-lg-4 col-md-6">
+                      <CustomInput
+                        label="Website Title"
+                        value={formData.WebsiteTitle}
+                        onChange={(v) => handleUpdate("WebsiteTitle", v)}
+                        required
+                      />
+                    </div>
+                    <div className="col-lg-4 col-md-6">
+                      <CustomInput
+                        label="Operation Hours"
+                        value={formData.OpenCloseTime}
+                        onChange={(v) => handleUpdate("OpenCloseTime", v)}
+                      />
+                    </div>
+                    <div className="col-lg-4 col-md-6">
+                      <CustomInput
+                        label="Location City"
+                        value={formData.LocationCity}
+                        onChange={(v) => handleUpdate("LocationCity", v)}
+                      />
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                      <CustomInput
+                        label="IFSC Code"
+                        value={formData.BankIFSC}
+                        onChange={(v) => handleUpdate("BankIFSC", v)}
+                      />
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                      <CustomInput
+                        label="RBI License No."
+                        value={formData.RBILicenseNo}
+                        onChange={(v) => handleUpdate("RBILicenseNo", v)}
+                      />
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                      <CustomInput
+                        label="PAN No."
+                        value={formData.PAN}
+                        onChange={(v) => handleUpdate("PAN", v)}
+                      />
+                    </div>
+                    <div className="col-lg-3 col-md-6">
+                      <CustomInput
+                        label="Registration No."
+                        value={formData.RegistrationNo}
+                        onChange={(v) => handleUpdate("RegistrationNo", v)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CARD 2: BANKING & APP LINKS */}
+            <div className="col-xl-6 col-12">
+              <div className="card border-0 shadow-sm h-100 rounded-4">
+                <div className="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+                  <LinkIcon size={20} className="text-primary" />
+                  <h5 className="mb-0 fw-bold">Banking Links</h5>
+                </div>
+                <div className="card-body p-4">
+                  <div className="row g-3">
+                    <div className="col-12">
+                      <CustomInput
+                        label="Net Banking Login URL"
+                        value={formData.NetBankingLink}
+                        onChange={(v) => handleUpdate("NetBankingLink", v)}
+                        placeholder="https://"
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <CustomInput
+                        label="Android App Store"
+                        value={formData.AndroidApplicationLink}
+                        onChange={(v) =>
+                          handleUpdate("AndroidApplicationLink", v)
+                        }
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <CustomInput
+                        label="iOS App Store"
+                        value={formData.IOSApplicationLink}
+                        onChange={(v) => handleUpdate("IOSApplicationLink", v)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-xl-6 col-12">
+              <div className="card border-0 shadow-sm h-100 rounded-4">
+                <div className="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+                  <Share2 size={20} className="text-primary" />
+                  <h5 className="mb-0 fw-bold">Social Media Presence</h5>
+                </div>
+                <div className="card-body p-4">
+                  <div className="row g-3">
+                    <div className="col-md-6">
+                      <CustomInput
+                        label="Facebook"
+                        value={formData.FacebookLink}
+                        onChange={(v) => handleUpdate("FacebookLink", v)}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <CustomInput
+                        label="Instagram"
+                        value={formData.InstagramLink}
+                        onChange={(v) => handleUpdate("InstagramLink", v)}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <CustomInput
+                        label="Twitter (X)"
+                        value={formData.Twitter}
+                        onChange={(v) => handleUpdate("Twitter", v)}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <CustomInput
+                        label="WhatsApp Support"
+                        value={formData.WhatsAppBanking}
+                        onChange={(v) => handleUpdate("WhatsAppBanking", v)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
