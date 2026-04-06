@@ -312,7 +312,7 @@ export default function App({
           supportAllValues: true,
         },
         fullscreen: {
-          onEnterCallback: (container) =>
+          onEnterCallback: (container: HTMLElement) =>
             container.classList.add(
               "editor-container",
               "editor-container_classic-editor",
@@ -497,19 +497,22 @@ export default function App({
   );
 }
 
-function configUpdateAlert(config) {
-  if (configUpdateAlert.configUpdateAlertShown) {
+function configUpdateAlert(config: Record<string, any>) {
+  if ((configUpdateAlert as any).configUpdateAlertShown) {
     return;
   }
 
-  const isModifiedByUser = (currentValue, forbiddenValue) => {
+  const isModifiedByUser = (
+    currentValue: unknown,
+    forbiddenValue: unknown,
+  ): boolean => {
     if (currentValue === forbiddenValue) return false;
     if (currentValue === undefined) return false;
     return true;
   };
 
   const valuesToUpdate = [];
-  configUpdateAlert.configUpdateAlertShown = true;
+  (configUpdateAlert as any).configUpdateAlertShown = true;
 
   if (!isModifiedByUser(config.licenseKey, "<YOUR_LICENSE_KEY>")) {
     valuesToUpdate.push("LICENSE_KEY");
