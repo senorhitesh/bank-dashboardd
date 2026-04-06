@@ -111,7 +111,7 @@ export default function NewsPage() {
           </div>
           <button
             onClick={() => setModal("add")}
-            className="btn btn-sm btn-outline-danger d-flex align-items-center gap-2"
+            className="btn btn-white btn-sm border shadow-sm d-flex align-items-center gap-2 fw-medium"
           >
             <Plus size={14} /> Create News
           </button>

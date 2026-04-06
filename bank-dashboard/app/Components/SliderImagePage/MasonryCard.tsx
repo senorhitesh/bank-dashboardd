@@ -25,8 +25,6 @@ export default function MasonryCard({
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
-    // 'mb-3' and 'shadow-sm' are native Bootstrap.
-    // We keep 'style' for the masonry 'break-inside-avoid' as Bootstrap doesn't have a utility for it.
     <div
       className="card border-light shadow-sm mb-3 overflow-hidden position-relative"
       style={{ breakInside: "avoid", borderRadius: "12px" }}

@@ -57,6 +57,9 @@ export default function AlbumView({
     }
   };
 
+  const handleDelte = (imgId: number) => {
+    onDeleteImage(album.id, imgId);
+  };
   return (
     <div>
       {/* Inner header */}
@@ -139,7 +142,7 @@ export default function AlbumView({
           {album.images.map((img) => (
             <div key={img.id} className="col-6 col-md-4 col-lg-3">
               <div
-                className="position-relative rounded-3 overflow-hidden border bg-light"
+                className="position-relative AGCARD rounded-3 overflow-hidden border bg-light"
                 style={{ paddingBottom: "75%" }}
               >
                 <img
@@ -152,7 +155,8 @@ export default function AlbumView({
                       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23f1f5f9'/%3E%3C/svg%3E";
                   }}
                 />
-                {/* Delete overlay */}
+
+                {/* Delete overlay
                 {confirmId === img.id ? (
                   <div
                     className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center gap-2"
@@ -176,18 +180,31 @@ export default function AlbumView({
                   </div>
                 ) : (
                   <button
-                    onClick={() => setConfirmId(img.id)}
-                    className="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 rounded-circle p-1 opacity-0"
+                    onClick={() => {
+                      setConfirmId(img.id);
+                      handleDelte(img.id);
+                    }}
+                    className="btn btn-sm btn-danger postion-absolute top-0 end-0 m-2 rounded-circle p-1 opacity-0"
                     style={{ transition: "opacity .15s" }}
                     onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
                     onMouseLeave={(e) => (e.currentTarget.style.opacity = "0")}
                   >
                     <Trash2 size={12} />
                   </button>
-                )}
+                )} */}
+                <button
+                  onClick={() => {
+                    setConfirmId(img.id);
+                    handleDelte(img.id);
+                  }}
+                  className="btn deleteBtnActiveGallery btn-sm position-absolute btn-danger postion-absolute top-0 end-0 m-2 rounded-circle "
+                >
+                  <Trash2 size={12} />
+                </button>
               </div>
             </div>
           ))}
+          {/* Upload Image */}
           <div className="col-6 col-md-4 col-lg-3">
             <div
               onClick={() => fileRef.current?.click()}

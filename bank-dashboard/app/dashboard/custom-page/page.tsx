@@ -8,7 +8,6 @@ import {
   FileText,
   Globe,
   PenLine,
-  ArrowRight,
 } from "lucide-react";
 import { useState } from "react";
 import ActivePage from "@/app/Components/CustomPage/ActivePage";
@@ -268,7 +267,7 @@ const CustomPagePage = () => {
         </div>
         <button
           onClick={() => setAddModal(true)}
-          className="button-53"
+          className="btn btn-white border shadow-sm d-flex align-items-center gap-2 fw-medium"
           role="button"
         >
           <span className="text">
@@ -277,8 +276,9 @@ const CustomPagePage = () => {
         </button>
       </div>
 
-      <CustomizeBtn onCLick={() => setCustomAddModal(true)} />
-
+      <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <CustomizeBtn onCLick={() => setCustomAddModal(true)} />
+      </div>
       {/* Accordion */}
       <div className="d-flex flex-column gap-2">
         {pageData.map((section) => {

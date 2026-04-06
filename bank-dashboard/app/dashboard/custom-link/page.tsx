@@ -322,7 +322,7 @@ export default function CustomLinkPage() {
               setModal("add");
               setEditTarget(null);
             }}
-            className="btn btn-white border shadow-sm btn-sm fw-medium d-flex align-items-center gap-2 px-3"
+            className="btn btn-white border shadow-sm d-flex align-items-center gap-2 fw-medium"
           >
             <Plus size={16} /> Create link
           </button>

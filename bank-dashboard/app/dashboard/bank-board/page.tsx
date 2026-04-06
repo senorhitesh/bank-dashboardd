@@ -129,7 +129,7 @@ export default function BankBoardPage() {
             </div>
             <button
               onClick={() => setModal("add")}
-              className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2"
+              className="btn btn-white border shadow-sm d-flex align-items-center gap-2 fw-medium btn-sm"
             >
               <Plus size={14} /> Add Member
             </button>

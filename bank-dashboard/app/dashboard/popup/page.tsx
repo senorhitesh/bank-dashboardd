@@ -89,7 +89,6 @@ const PopupPage = () => {
     setEditTarget(null);
   }
 
-  // Auto-generate statusDetails from form data
   function buildStatusDetails(formData: {
     img: string;
     status: string;
@@ -139,7 +138,7 @@ const PopupPage = () => {
               setModal("add");
               setEditTarget(null);
             }}
-            className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 fw-medium"
+            className="btn btn-white border shadow-sm d-flex align-items-center gap-2 fw-medium"
           >
             <Plus size={16} /> Add Popup
           </button>

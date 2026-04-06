@@ -191,7 +191,7 @@ export default function UsersPage() {
           </div>
           <button
             onClick={() => setModal("add")}
-            className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2"
+            className="btn btn-white border shadow-sm d-flex align-items-center gap-2 fw-medium"
           >
             <Plus size={14} /> Add User
           </button>
@@ -208,9 +208,6 @@ export default function UsersPage() {
               className="input-group input-group-sm"
               style={{ maxWidth: 340 }}
             >
-              <span className="input-group-text bg-light border-end-0">
-                <Search size={13} className="text-secondary" />
-              </span>
               <SearchInput
                 type="text"
                 placeholder="Search for User Name..."

@@ -2,28 +2,29 @@
 
 import { X, Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
-
+interface PdProp {
+  id: number;
+  title: string;
+  value: string;
+  isPassword?: boolean;
+}
 const SettingModal = ({
-  label,
-  value,
-  isPassword = false,
+  target,
   onClose,
   onSave,
 }: {
-  label: string;
-  value: string;
-  isPassword?: boolean;
+  target: PdProp;
   onClose: () => void;
   onSave: (val: string) => void;
 }) => {
-  const [inputVal, setInputVal] = useState(value);
+  const [inputVal, setInputVal] = useState(target.value);
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!inputVal.trim()) {
-      setError(`${label} cannot be empty`);
+      setError(`${target.title} cannot be empty`);
       return;
     }
     onSave(inputVal.trim());
@@ -44,7 +45,7 @@ const SettingModal = ({
         {/* Header */}
         <div className="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
           <h6 className="fw-semibold mb-0" style={{ fontSize: 15 }}>
-            Edit {label}
+            Edit {target.title}
           </h6>
           <button
             style={{ display: "flex", width: "40px", height: "40px" }}
@@ -62,11 +63,11 @@ const SettingModal = ({
         >
           <div>
             <label className="form-label small fw-medium text-secondary mb-1">
-              {label}
+              {target.value}
             </label>
             <div className="input-group input-group-sm">
               <input
-                type={isPassword && !showPw ? "password" : "text"}
+                type={target.isPassword && !showPw ? "password" : "text"}
                 className={`form-control ${error ? "is-invalid" : ""}`}
                 value={inputVal}
                 onChange={(e) => {
@@ -75,8 +76,7 @@ const SettingModal = ({
                 }}
                 autoFocus
               />
-              {/* ✅ FIX 3: password field had no show/hide toggle */}
-              {isPassword && (
+              {target.isPassword && (
                 <button
                   type="button"
                   className="input-group-text bg-light border-start-0 px-2"

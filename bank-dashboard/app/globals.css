@@ -253,7 +253,6 @@ background-color: #f7f7f7;
 
 /* Customise Btn */
 .customsieBtn{
-	width: 100%;
     height: 12vh;
     border-radius: 12;
     background-color: rgba(247, 247, 247, 0.07);
@@ -387,3 +386,16 @@ border:1px solid #d4d4d4
 .child:hover{
   background-color: #f6f6f6;
 }
+
+.deleteBtnActiveGallery{
+  opacity: 0;
+  scale:0;
+  transition:all .2s ease ;
+  translate:rotate(12deg)
+}
+
+.AGCARD:hover .deleteBtnActiveGallery{
+    opacity: 100;
+  scale:1;
+  translate: rotate(0deg);
+} 

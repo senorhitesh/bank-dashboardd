@@ -173,7 +173,7 @@ export default function UnclaimAccountPage() {
         </div>
         <button
           onClick={downloadTemplate}
-          className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2"
+          className="btn btn-white border btn-sm shadow-sm d-flex align-items-center gap-2 fw-medium"
         >
           <Download size={13} /> Download Template
         </button>
@@ -356,9 +356,6 @@ export default function UnclaimAccountPage() {
           </div>
 
           <div className="input-group input-group-sm" style={{ maxWidth: 260 }}>
-            <span className="input-group-text bg-light border-end-0">
-              <Search size={12} className="text-secondary" />
-            </span>
             <SearchInput
               type="text"
               placeholder="Search name, address, UDRN..."

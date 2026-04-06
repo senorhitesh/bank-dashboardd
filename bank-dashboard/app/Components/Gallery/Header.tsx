@@ -19,7 +19,7 @@ const Header = ({
       </div>
       <button
         onClick={onClick}
-        className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2"
+        className="btn btn-white border shadow-sm d-flex align-items-center gap-2 fw-medium"
       >
         <Plus size={15} /> Add Album
       </button>

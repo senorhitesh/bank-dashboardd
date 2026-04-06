@@ -82,13 +82,14 @@ const PersonalInfoPage = () => {
 
   const initials = user?.name?.slice(0, 2).toUpperCase() ?? "??";
 
-  if (!user) return null; // redirect in progress
+  if (!user) return null;
 
+  console.log(selectedCard);
   return (
     <>
       {modal && selectedCard && (
         <SettingModal
-          field={selectedCard}
+          target={selectedCard}
           onClose={() => setModal(false)}
           onSave={onSave}
         />
