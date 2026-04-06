@@ -184,15 +184,7 @@ const SideNav = () => {
   };
 
   return (
-    <aside
-      className="position-fixed top-0 start-0 d-flex flex-column bg-white border-end shadow-sm"
-      style={{
-        width: "260px",
-        height: "100vh",
-        zIndex: 1040,
-        padding: "0 12px",
-      }}
-    >
+    <aside className=" sideNav  start-0 border-end shadow-sm">
       {/* Logo Section */}
       <div className="py-4 px-2 border-bottom border-light">
         <img
@@ -211,7 +203,6 @@ const SideNav = () => {
           const isActive = activeId === item.id;
           const isChildActive = item.children?.some((c) => c.id === activeId);
 
-          // sharedClass: Handles the primary blue look for active items
           const sharedClass = `btn w-100 d-flex align-items-center justify-content-between px-3 py-2 rounded-3 border-0 transition-all text-start ${
             isActive && !hasChildren
               ? "bg-primary-subtle text-primary fw-bold"

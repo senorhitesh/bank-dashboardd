@@ -371,3 +371,15 @@ border:1px solid #d4d4d4
   transition-delay: 0.2s;
 }
 
+
+.sideNav {
+  width: 260px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  overflow-y: auto;
+  padding: 0 12px;
+}
