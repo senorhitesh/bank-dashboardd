@@ -2,8 +2,6 @@
 
 import SideNav from "../Components/SideNav";
 import Header from "../Components/Header";
-import { Menu } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import MobileHeader from "../Components/MobileHeader";
 import SideNavMobile from "../Components/SideNavMobile";
@@ -51,7 +49,7 @@ export default function DashboardLayout({
 
         {/* Mobile topbar — hidden on desktop */}
         {openMobileLinks ? (
-          <SideNavMobile />
+          <SideNavMobile setOpenLink={setopenMobileLinks} />
         ) : (
           <MobileHeader setOpenLink={setopenMobileLinks} />
         )}

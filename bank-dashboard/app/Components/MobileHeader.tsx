@@ -3,6 +3,10 @@
 import { Menu } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { removeUser } from "../lib/session";
+
 const MobileHeader = ({
   setOpenLink,
 }: {
